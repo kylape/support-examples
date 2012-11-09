@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To the extent possible under law, Red Hat, Inc. has dedicated all copyright 
+  to this software to the public domain worldwide, pursuant to the CC0 Public 
+  Domain Dedication. This software is distributed without any warranty.  See 
+  <http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<jboss-deployment-structure>
+  <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+  <sub-deployment name="saajTest.jar">
+    <exclusions>
+      <module name="org.jboss.ws.saaj-impl"/>
+    </exclusions>
+    <dependencies>
+      <module name="sun.internal.saaj"/>
+      <module name="org.jboss.modules"/>
+    </dependencies>
+  </sub-deployment>
+  <sub-deployment name="saajTest.war">
+    <exclusions>
+      <module name="org.apache.log4j"/>
+      <module name="org.hibernate"/>
+      <!--<module name="javaee.api"/>-->
+      <module name="com.sun.xml.messaging.saaj"/>
+      <module name="javax.xml.soap.api"/>
+      <module name="org.jboss.ws.saaj-impl"/>
+      <module name="javax.activation.api"/>
+    </exclusions>
+    <dependencies>
+      <module name="org.jboss.modules"/>
+    </dependencies>
+  </sub-deployment>
+</jboss-deployment-structure>
