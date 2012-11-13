@@ -1,0 +1,78 @@
+package com.redhat.gss.ws;
+
+import javax.xml.bind.annotation.*;
+//import sample.jaxws.MyExceptionBean;
+
+@javax.xml.ws.WebFault
+public class MyException extends SuperException
+{
+  //private MyExceptionBean faultInfo;
+  private String summary;
+  private String from;
+  //private int id;
+
+  public MyException(String message)
+  {
+    super(message);
+  }
+
+  /*
+  public MyException(String summary, int id, String message, String from)
+  {
+    super(message);
+    this.summary = summary;
+    this.from = from;
+    this.id = id;
+  }
+
+  public MyException(MyExceptionBean faultInfo)
+  {
+    this.faultInfo = faultInfo;
+  }
+
+  public MyExceptionBean getFaultInfo()
+  {
+    return faultInfo;
+  }
+
+  public void setFaultInfo(MyExceptionBean faultInfo)
+  {
+    this.faultInfo = faultInfo;
+  }
+
+  */
+
+  public void setSummary(String summary)
+  {
+    this.summary = summary;
+  }
+
+  public void setFrom(String from)
+  {
+    this.from = from;
+  }
+
+  /*
+  public void setId(int id)
+  {
+    this.id = id;
+  }
+  */
+
+  public String getSummary()
+  {
+    return summary;
+  }
+
+  public String getFrom()
+  {
+    return from;
+  }
+
+  /*
+  public int getId()
+  {
+    return id;
+  }
+  */
+}
