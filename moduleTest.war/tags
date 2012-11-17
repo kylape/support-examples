@@ -1,0 +1,18 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ModuleTest	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^public class ModuleTest extends HttpServlet implements ModuleTestIntfc$/;"	c
+ModuleTestIntfc	WEB-INF/classes/com/redhat/gss/modules/ModuleTestIntfc.java	/^public interface ModuleTestIntfc$/;"	i
+com.redhat.gss.modules	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^package com.redhat.gss.modules;$/;"	p
+com.redhat.gss.modules	WEB-INF/classes/com/redhat/gss/modules/ModuleTestIntfc.java	/^package com.redhat.gss.modules;$/;"	p
+doGet	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^  public void doGet(HttpServletRequest request, HttpServletResponse response)$/;"	m	class:ModuleTest
+getDeploymentModule	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^  public String getDeploymentModule() throws Exception$/;"	m	class:ModuleTest
+getDeploymentModule	WEB-INF/classes/com/redhat/gss/modules/ModuleTestIntfc.java	/^  public String getDeploymentModule() throws Exception;$/;"	m	interface:ModuleTestIntfc
+getModuleOfClass	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^  private String getModuleOfClass(Class clazz) throws Exception$/;"	m	class:ModuleTest	file:
+getModuleOfClass	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^  public String getModuleOfClass(String className) throws Exception$/;"	m	class:ModuleTest
+getModuleOfClass	WEB-INF/classes/com/redhat/gss/modules/ModuleTestIntfc.java	/^  public String getModuleOfClass(@WebParam(name="className") String className) $/;"	m	interface:ModuleTestIntfc
+testSaajMessageFactory	WEB-INF/classes/com/redhat/gss/modules/ModuleTest.java	/^  public String testSaajMessageFactory() throws Exception$/;"	m	class:ModuleTest
+testSaajMessageFactory	WEB-INF/classes/com/redhat/gss/modules/ModuleTestIntfc.java	/^  public String testSaajMessageFactory() throws Exception;$/;"	m	interface:ModuleTestIntfc
