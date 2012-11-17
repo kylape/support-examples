@@ -27,19 +27,20 @@
   <dependencies>
     <system export="true">
       <paths>
-        <path name="com/sun/xml/internal/messaging/saaj/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/client/p2p/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime/internet/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime/util/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/dynamic/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/impl/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/name/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/ver1_1/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/soap/ver1_2/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/util/"/>
-        <path name="com/sun/xml/internal/messaging/saaj/util/transform/"/>
+        <path name="com/sun/xml/internal/messaging/saaj"/>
+        <path name="com/sun/xml/internal/messaging/saaj/client/p2p"/>
+        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime"/>
+        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime/internet"/>
+        <path name="com/sun/xml/internal/messaging/saaj/packaging/mime/util"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap/dynamic"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap/impl"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap/name"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap/ver1_1"/>
+        <path name="com/sun/xml/internal/messaging/saaj/soap/ver1_2"/>
+        <path name="com/sun/xml/internal/messaging/saaj/util"/>
+        <path name="com/sun/xml/internal/messaging/saaj/util/transform"/>
+        <path name="javax/xml/soap"/>
       </paths>
       <exports>
         <include-set>

@@ -6,3 +6,6 @@ The web service is pretty straightforward to use (use SoapUI), but the servlet n
 
     http://localhost:8080/moduleTest/moduleTest?command=getModuleOfClass&className=javax.xml.ws.Service
 
+Use the `testSaajMessageFactory` method to figure out how to make a deployment in EAP 6 use the SAAJ implementation found in the JDK.
+
+Make sure to copy the `sun.internal.saaj` module to your `$JBOSS_HOME/modules` directory.
