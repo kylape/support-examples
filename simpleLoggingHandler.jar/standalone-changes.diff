@@ -1,0 +1,30 @@
+diff --git a/standalone/configuration/standalone.xml b/standalone/configuration/standalone.xml
+index 354faca..4249057 100644
+--- a/standalone/configuration/standalone.xml
++++ b/standalone/configuration/standalone.xml
+@@ -69,6 +69,12 @@
+                 <suffix value=".yyyy-MM-dd"/>
+                 <append value="true"/>
+             </periodic-rotating-file-handler>
++            <custom-handler name="SYSOUT" class="com.redhat.gss.logging.SystemOutHandler" module="com.redhat.gss.logging">
++                <level name="INFO"/>
++                <formatter>
++                    <pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/>
++                </formatter>
++            </custom-handler>
+             <logger category="com.arjuna">
+                 <level name="WARN"/>
+             </logger>
+@@ -85,10 +91,11 @@
+                 <level name="ERROR"/>
+             </logger>
+             <root-logger>
+-                <level name="INFO"/>
++                <level name="ALL"/>
+                 <handlers>
+                     <handler name="CONSOLE"/>
+                     <handler name="FILE"/>
++                    <handler name="SYSOUT"/>
+                 </handlers>
+             </root-logger>
+         </subsystem>
