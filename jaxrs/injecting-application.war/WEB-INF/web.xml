@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+  <module-name>injecting-resource</module-name>
+  <context-param>
+    <param-name>javax.ws.rs.Application</param-name>
+    <param-value>com.redhat.gss.rs.MyApplication</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>com.redhat.gss.rs.MyApplication</servlet-name>
+    <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+    <init-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>com.redhat.gss.rs.MyApplication</param-value>
+    </init-param>
+    <init-param>
+      <param-name>resteasy.servlet.mapping.prefix</param-name>
+      <param-value>rest</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>com.redhat.gss.rs.MyApplication</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+  <!--
+  <listener>
+    <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+  </listener>
+  -->
+</web-app>
