@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-ws-security xmlns="http://www.jboss.com/ws-security/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">
+  <key-store-file>META-INF/bob-sign.jks</key-store-file>
+  <key-store-password>password</key-store-password>
+  <key-store-type>jks</key-store-type>
+  <trust-store-file>META-INF/wsse10.truststore</trust-store-file>
+  <trust-store-password>password</trust-store-password>
+  <config>
+    <sign type="x509v3" alias="1" includeTimestamp="false"/>
+    <requires>
+      <signature/>
+    </requires>
+    <authenticate>
+      <signatureCertAuth certificatePrincipal="org.jboss.security.auth.certs.SubjectCNMapping"/>
+    </authenticate>
+  </config>
+</jboss-ws-security>

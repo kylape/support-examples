@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!DOCTYPE policy PUBLIC
+      "-//JBoss//DTD JBOSS Security Config 3.0//EN"
+      "http://www.jboss.org/j2ee/dtd/security_config.dtd">
+
+<policy>
+    
+    <application-policy name="JBossWSCert">
+      <authentication>
+        <login-module code="org.jboss.security.auth.spi.CertRolesLoginModule"
+          flag="required">
+          <module-option name="rolesProperties">META-INF/jbossws-roles.properties</module-option>
+          <module-option name="unauthenticatedIdentity">anonymous</module-option>
+          <module-option name="securityDomain">java:/jaas/JBossWSCert</module-option>
+        </login-module>
+      </authentication>
+    </application-policy>
+
+</policy>
+
