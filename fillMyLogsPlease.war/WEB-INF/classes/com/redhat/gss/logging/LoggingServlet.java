@@ -25,7 +25,10 @@ public class LoggingServlet extends HttpServlet
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
   {
-    log.info("This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement.");
+    for(int i=0; i<1000; i++)
+    {
+      log.info("This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement. This is a really big log statement.");
+    }
 
     log2.fine("This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement. This is a really fine log statement.");
   }
