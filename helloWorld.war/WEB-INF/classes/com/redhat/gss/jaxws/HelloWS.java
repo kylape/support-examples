@@ -7,20 +7,8 @@
 
 package com.redhat.gss.jaxws;
 
-import javax.xml.ws.spi.Provider;
-import org.jboss.logging.Logger;
-
-@javax.jws.WebService
-@org.apache.cxf.annotations.Logging(pretty=true)
-//@org.apache.cxf.feature.Features(features={"org.apache.cxf.feature.LoggingFeature"})
-public class HelloWS
+@javax.jws.WebService(portName="hello")
+public interface HelloWS
 {
-  private Logger log = Logger.getLogger(this.getClass().getName());
-
-  public String hello(String name) throws Exception
-  {
-    Provider provider = Provider.provider();
-    log.info("WS Provider: " + provider.getClass().getName());
-    return "Hello, " + name;
-  }
+  public String hello(String name);
 }

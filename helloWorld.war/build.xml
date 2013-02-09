@@ -44,7 +44,7 @@ Adding custom lib directory in build.properties
 	<condition property="jboss-server-dir" value="${jboss-home}/${jboss-server}" else="${jboss-home}/server/${jboss-server}"><isset property="AS7"/></condition>
 
 	<condition property="jboss-deploy-dir" value="${jboss-server-dir}/deployments/" else="${jboss-server-dir}/deploy/"><isset property="AS7"/></condition>
-	<!-- <property name="jboss-endorsed-dir" location="${jboss-home}/lib/endorsed/"/> -->
+	<property name="jboss-endorsed-dir" location="${jboss-home}/lib/endorsed/"/>
 
 	<condition property="lib" value="${jboss-home}/modules/" else="${jboss-server-dir}/lib"><isset property="AS7"/></condition>
 	<property name="ant.project.name" value="${dirName}" />	
@@ -317,7 +317,7 @@ Adding custom lib directory in build.properties
 
 		<echo>PROPS: ${srcpath} ${destdir}</echo>
 
-		<javac destdir="${destdir}" debug="${debug}" debuglevel="${debuglevel}">
+		<javac target="1.5" source="1.5" destdir="${destdir}" debug="${debug}" debuglevel="${debuglevel}">
 			<src path="${srcpath}"/>
 			<classpath refid="classpath"/>
 		</javac>
@@ -492,6 +492,7 @@ Adding custom lib directory in build.properties
 		<java classname="${test-client}" fork="true">
         <jvmarg value="-Djava.endorsed.dirs=${jboss-endorsed-dir}"/>
         <jvmarg value="-Djava.security.policy=${auth-conf}"/>
+        <jvmarg value="-Djava.awt.headless=true"/>
 <!--
      -Djava.security.manager -Djava.security.policy=$JBOSS_HOME/bin/java.policy"
 -->
