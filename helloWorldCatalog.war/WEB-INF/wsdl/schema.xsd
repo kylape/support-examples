@@ -1,0 +1,26 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ws.examples.jboss.com/" xmlns="http://ws.examples.jboss.com/">
+  <xs:complexType name="helloInput">
+    <xs:sequence>
+      <xs:element name="excited" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="helloReturn">
+    <xs:sequence>
+      <xs:element name="excited" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="greeting" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="hello" type="hello"/>
+  <xs:complexType name="hello">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="helloInput"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="helloResponse" type="helloResponse"/>
+  <xs:complexType name="helloResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="helloReturn"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

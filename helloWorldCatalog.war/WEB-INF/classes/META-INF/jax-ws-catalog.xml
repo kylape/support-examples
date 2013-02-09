@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+  <system systemId="http://ws.examples.jboss.com/helloWorld.wsdl" uri="../../wsdl/HelloWorld.wsdl"/>
+  <system systemId="http://ws.examples.jboss.com/schema.xsd" uri="../../wsdl/schema.xsd"/>
+</catalog>

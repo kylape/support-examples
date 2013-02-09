@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+  <servlet>
+    <servlet-name>Simple</servlet-name>
+    <servlet-class>com.jboss.examples.ws.HelloWorldImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Simple</servlet-name>
+    <url-pattern>/Simple</url-pattern>
+  </servlet-mapping>
+  <!--
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>All resources</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+-->
+</web-app>
