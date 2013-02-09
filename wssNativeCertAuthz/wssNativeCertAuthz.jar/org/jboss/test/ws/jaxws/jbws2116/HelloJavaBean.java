@@ -28,6 +28,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.BindingType;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.annotation.EndpointConfig;
@@ -37,6 +38,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @Stateless
 @WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/wssNativeCertAuthz")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
+@BindingType(javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 @WebContext(contextRoot = "/wssNativeCertAuthz", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
 public class HelloJavaBean

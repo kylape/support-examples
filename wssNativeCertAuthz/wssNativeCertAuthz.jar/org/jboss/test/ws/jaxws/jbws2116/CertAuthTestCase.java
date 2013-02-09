@@ -47,7 +47,7 @@ public class CertAuthTestCase
    {
       CertAuthTestCase test = new CertAuthTestCase();
       test.testAuthAlice();
-      test.testAuthJohn();
+      //test.testAuthJohn();
    }
 
    public void testAuthAlice() throws Exception
@@ -122,7 +122,7 @@ public class CertAuthTestCase
       Hello port = Service.create(wsdlURL, serviceName).getPort(Hello.class);
       URL securityURL = this.getClass().getResource("/META-INF/jboss-wsse-client.xml");
       ((StubExt)port).setSecurityConfig(securityURL.toExternalForm());
-      ((StubExt)port).setConfigName("Standard WSSecurity Client");
+      ((StubExt)port).setConfigName("Standard WSSecurity Client", "META-INF/jaxws-client-config.xml");
       ((BindingProvider)port).getRequestContext().put(StubExt.PROPERTY_AUTH_TYPE, StubExt.PROPERTY_AUTH_TYPE_WSSE);
       return port;
    }
