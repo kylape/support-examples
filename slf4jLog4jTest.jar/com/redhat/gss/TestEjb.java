@@ -6,26 +6,22 @@
  */
 package com.redhat.gss;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @javax.ejb.Singleton
 @javax.ejb.Startup
 @javax.jws.WebService
 public class TestEjb
 {
-  private org.apache.log4j.Logger log2 = org.apache.log4j.Logger.getLogger(this.getClass());
-  private Logger log = LoggerFactory.getLogger(this.getClass());
+  private org.slf4j.Logger slf4j = org.slf4j.LoggerFactory.getLogger(this.getClass());
+  private org.apache.log4j.Logger log4j = org.apache.log4j.Logger.getLogger(this.getClass());
+  private org.jboss.logging.Logger jbossLogging = org.jboss.logging.Logger.getLogger(this.getClass());
+  private java.util.logging.Logger julLogger = java.util.logging.Logger.getLogger(this.getClass().getName());
 
   @javax.annotation.PostConstruct
   public void test()
   {
-     log2.info("LOG4J");
-     log.info("SLF4J");
-  }
-
-  public void boom()
-  {
-    log.info("SLF4J");
+    slf4j.info("sfl4j");
+    log4j.info("log4j");
+    jbossLogging.info("jbossLogging");
+    julLogger.info("julLogger");
   }
 }
