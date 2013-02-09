@@ -1,4 +1,4 @@
-##SLF4J via Log4J in EAP 6
+##Logging Facade Example
 
 This deployment has a simple EJB with one `@PostConstruct`-annotated method.
 I've included four different types of loggers:
