@@ -7,46 +7,22 @@
 package com.redhat.gss.ws;
 
 import javax.xml.bind.annotation.*;
-//import sample.jaxws.MyExceptionBean;
 
 @javax.xml.ws.WebFault
+//@XmlType(
+  //name="myException",
+  //propOrder={"from","id","summary"}
+//)
+@XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 public class MyException extends SuperException
 {
-  //private MyExceptionBean faultInfo;
   private String summary;
   private String from;
-  //private int id;
 
   public MyException(String message)
   {
     super(message);
   }
-
-  /*
-  public MyException(String summary, int id, String message, String from)
-  {
-    super(message);
-    this.summary = summary;
-    this.from = from;
-    this.id = id;
-  }
-
-  public MyException(MyExceptionBean faultInfo)
-  {
-    this.faultInfo = faultInfo;
-  }
-
-  public MyExceptionBean getFaultInfo()
-  {
-    return faultInfo;
-  }
-
-  public void setFaultInfo(MyExceptionBean faultInfo)
-  {
-    this.faultInfo = faultInfo;
-  }
-
-  */
 
   public void setSummary(String summary)
   {
@@ -58,13 +34,6 @@ public class MyException extends SuperException
     this.from = from;
   }
 
-  /*
-  public void setId(int id)
-  {
-    this.id = id;
-  }
-  */
-
   public String getSummary()
   {
     return summary;
@@ -74,11 +43,4 @@ public class MyException extends SuperException
   {
     return from;
   }
-
-  /*
-  public int getId()
-  {
-    return id;
-  }
-  */
 }
