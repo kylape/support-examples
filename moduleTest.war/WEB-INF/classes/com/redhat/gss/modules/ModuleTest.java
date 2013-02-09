@@ -8,6 +8,7 @@ package com.redhat.gss.modules;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 
-import org.jboss.modules.ModuleClassLoader;
 import org.jboss.modules.Module;
+import org.jboss.modules.ModuleIdentifier;
+import org.jboss.modules.ModuleClassLoader;
 
 //@javax.jws.WebService(endpointInterface="com.redhat.gss.modules.ModuleTestIntfc")
 @javax.servlet.annotation.WebServlet(urlPatterns={"/*"})
@@ -52,12 +54,56 @@ public class ModuleTest extends HttpServlet implements ModuleTestIntfc
       return "No class def found";
     }
 
-    return getModuleOfClass(clazz);
+    if(clazz == null)
+      return "Class not found";
+    else
+      return getModuleOfClass(clazz);
   }
 
   private String getModuleOfClass(Class clazz)
   {
-    return ((ModuleClassLoader)clazz.getClassLoader()).getModule().getIdentifier().toString();
+    ModuleClassLoader cl = null;
+
+    try
+    {
+      cl = ((ModuleClassLoader)clazz.getClassLoader());
+    }
+    catch(ClassCastException cce)
+    {
+      return "Class found, but the classloader was not a ModuleClassLoader. " +
+             "The class was likely loaded by a system classloader before JBoss " + 
+             "Modules was fully bootstrapped.";
+    }
+
+    if(cl == null)
+      return "Class found, but it's probably a JDK class";
+
+    Module m = cl.getModule();
+    ModuleIdentifier mi = m.getIdentifier();
+    return mi.toString();
+  }
+
+  public String getResource(String resourceName)
+  {
+    URL url = null;
+
+    try
+    {
+      url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+    }
+    catch(Exception e)
+    {
+      return "Resource not found: " + e.getMessage();
+    }
+
+    if(url == null)
+    {
+      return "Resource not found";
+    }
+    else
+    {
+      return url.toExternalForm();
+    }
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -97,6 +143,18 @@ public class ModuleTest extends HttpServlet implements ModuleTestIntfc
       else
       {
         responseString = getModuleOfClass(className);
+      }
+    }
+    else if(command.equals("getResource"))
+    {
+      String resourceName = request.getParameter("resourceName");
+      if(resourceName == null || resourceName.equals(""))
+      {
+        responseString = "Resource name must be defined";
+      }
+      else
+      {
+        responseString = getResource(resourceName);
       }
     }
 
