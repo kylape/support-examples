@@ -17,7 +17,12 @@ public class TestClient
 {
   public static void main(String[] args) throws Exception
   {
-    URL wsdl = new URL("http://localhost:8080/helloWorldEjb/HelloWS/HelloWSImpl?wsdl");
+    //JBossWS-CXF
+    //URL wsdl = new URL("http://localhost:8080/helloWorldEjb/HelloWS/HelloWSImpl?wsdl");
+    
+    //JBossWS-Native
+    URL wsdl = new URL("http://localhost:8080/helloWorldEjb/HelloWSImpl?wsdl");
+
     QName qname = new QName("http://jaxws.gss.redhat.com/", "HelloWS");
     final Service service = Service.create(wsdl, qname);
 
