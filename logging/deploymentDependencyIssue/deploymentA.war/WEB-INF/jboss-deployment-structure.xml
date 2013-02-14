@@ -14,7 +14,7 @@
       <module name="org.jboss.log4j.logmanager"/>
     </exclusions>
     <dependencies>
-      <module name="deployment.deploymentB.jar"/>
+      <module name="deployment.deploymentB.rar"/>
     </dependencies>
   </deployment>
 </jboss-deployment-structure>
