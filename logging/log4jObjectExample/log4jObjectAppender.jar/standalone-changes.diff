@@ -1,0 +1,28 @@
+--- standalone/configuration/standalone.xml.orig	2013-02-26 13:02:30.000000000 -0600
++++ standalone/configuration/standalone.xml	2013-02-26 14:54:24.000000000 -0600
+@@ -68,6 +68,12 @@
+                 <suffix value=".yyyy-MM-dd"/>
+                 <append value="true"/>
+             </periodic-rotating-file-handler>
++            <custom-handler name="l4jObjApp" class="com.redhat.gss.logging.Log4JObjectAppender" module="com.redhat.gss.logging">
++                <level name="INFO"/>
++                <formatter>
++                    <pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/>
++                </formatter>
++            </custom-handler>
+             <logger category="com.arjuna">
+                 <level name="WARN"/>
+             </logger>
+@@ -86,6 +92,12 @@
+             <logger category="jacorb.config">
+                 <level name="ERROR"/>
+             </logger>
++            <logger category="com.redhat.gss.logging">
++                <level name="INFO"/>
++                <handlers>
++                    <handler name="l4jObjApp"/>
++                </handlers>
++            </logger>
+             <root-logger>
+                 <level name="INFO"/>
+                 <handlers>
