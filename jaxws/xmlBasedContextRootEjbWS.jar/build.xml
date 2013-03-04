@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To the extent possible under law, Red Hat, Inc. has dedicated all copyright 
+  to this software to the public domain worldwide, pursuant to the CC0 Public 
+  Domain Dedication. This software is distributed without any warranty.  See 
+  <http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<!-- 
+author: Brad Maxwell
+Simplified Build
+version 0.4 May 28, 2010
+Added Help
+Adding custom lib directory in build.properties
+-->
+
+<project name="simplified-build" default="all">
+	<!-- =====  PROPERTIES ===== -->
+	<property environment="env"/>
+	<!-- <basename property="dirName" file="${env.PWD}"/> -->
+	<!-- <dirname property="script-dir" file="${ant.file.main}"/> --> <!-- same as env.BUILD_SCRIPTS -->
+
+	<basename property="dirName" file="${basedir}"/>
+
+	<!-- <available property="unified-build-exists" file="${basedir}/unified-build.xml" value="true"/> -->
+	<property name="parentDir" location="${basedir}/.."/>
+
+	<property file="build.properties"/> <!-- Include build.properties -->
+
+	<!-- environment variables that need to be set -->
+	<condition property="jboss-home" value="${JBOSS_HOME}" else="${env.JBOSS_HOME}"><isset property="JBOSS_HOME"/></condition>
+
+	<!-- init method will verify they are set -->
+
+  <!-- AS7 / EAP6 -->
+	<available file="${jboss-home}/modules" property="AS7"/>
+
+  <!-- use default if env.JBOSS_PROFILE is not set and not specified in build.properties -->
+	<condition property="JBOSS_PROFILE" value="standalone" else="default"><isset property="AS7"/></condition>
+
+	<!-- <condition property="jboss-server" value="${JBOSS_PROFILE}" else="${env.JBOSS_PROFILE}"><isset property="JBOSS_PROFILE"/></condition> -->
+	<condition property="jboss-server" value="${env.JBOSS_PROFILE}" else="${JBOSS_PROFILE}"><isset property="env.JBOSS_PROFILE"/></condition>
+
+
+	<condition property="jboss-server-dir" value="${jboss-home}/${jboss-server}" else="${jboss-home}/server/${jboss-server}"><isset property="AS7"/></condition>
+
+	<condition property="jboss-deploy-dir" value="${jboss-server-dir}/deployments/" else="${jboss-server-dir}/deploy/"><isset property="AS7"/></condition>
+	<property name="jboss-endorsed-dir" location="${jboss-home}/lib/endorsed/"/>
+
+	<condition property="lib" value="${jboss-home}/modules/" else="${jboss-server-dir}/lib"><isset property="AS7"/></condition>
+	<property name="ant.project.name" value="${dirName}" />	
+	<property name="archive.name" value="${dirName}" />	
+	<property name="dist" value="dist"/>
+
+	<condition property="debuglevel" value="${debuglevel}" else="lines,vars,source"><isset property="debuglevel"/></condition>	
+	<condition property="debug" value="${debug}" else="on"><isset property="debug"/></condition>	
+
+	<!-- can set property, then use condition value="", if condition is not satisfied, it will not change the property -->
+		
+	<!-- =====  ARCHIVE-TYPE ===== -->
+	<condition property="archive-type" value="jar"><matches string="${dirName}" pattern="^.*\.jar$"/></condition>
+	<condition property="archive-type" value="sar"><matches string="${dirName}" pattern="^.*\.sar$"/></condition>
+	<condition property="archive-type" value="war"><matches string="${dirName}" pattern="^.*\.war$"/></condition>
+	<condition property="archive-type" value="ear"><matches string="${dirName}" pattern="^.*\.ear$"/></condition>
+	<condition property="archive-type" value="aop"><matches string="${dirName}" pattern="^.*\.aop$"/></condition>
+	<condition property="archive-type" value="beans"><matches string="${dirName}" pattern="^.*\.beans$"/></condition>
+
+	<!-- this is the name of the ear/war/jar/... without the extension -->
+	<basename property="archive-name" file="${basedir}" suffix=".${archive-type}"/>
+
+	<!-- this property checks to see if it is an ear, and if so it will prevent the build target being called on the ear -->
+	<condition property="build" value="true">
+		<not><matches string="${archive-type}" pattern="ear"/></not>
+	</condition>
+
+	<!-- used to determine if ear needs to be packaged  -->
+	<condition property="ear" value="true">
+		<matches string="${archive-type}" pattern="ear"/>
+	</condition>
+
+<!--
+	<condition property="manifest-class-path" value=""><not><isset property="manifest-class-path"/></not></condition>
+-->
+  <condition property="main-class" value=""><not><isset property="main-class"/></not></condition>
+
+	<condition property="earLib" value="${parentDir}/lib/" else="">
+			<and>
+			<matches string="${parentDir}" pattern="^.*\.ear$"/>
+			<available file="${parentDir}/lib" type="dir"/>
+			</and>
+	</condition>
+
+	<condition property="apiJarEarLib" value="../" else="">
+			<!-- for api-jar in lib dir -->
+			<and>
+			<!-- <matches string="${parentDir}" pattern="^.*/lib$"/> --> <!-- TODO this doesn't work on win -->
+			<matches string="${dirName}" pattern="^.*-api.jar$"/>
+			</and>
+	</condition>
+
+	<condition property="buildPath" value="WEB-INF/classes" else="">
+		<matches string="${archive-type}" pattern="^war$"/>
+	</condition>
+	<condition property="buildPath" value="" else=".">
+		<matches string="${archive-type}" pattern="^ear$"/>
+	</condition>
+
+	<!-- this should be . if in ear or .. if in sub dir -->
+	<condition property="ear-sub-archives-dir" value="." else="..">
+		<matches string="${archive-type}" pattern="^ear$"/>
+	</condition>
+	<condition property="ear-lib-dir" value="./lib" else="../lib">
+		<matches string="${archive-type}" pattern="^ear$"/>
+	</condition>
+
+	<condition property="include-build-classpath" value="">
+		<not><isset property="include-build-classpath"/></not>
+	</condition>
+
+	<!-- =====  PATHS / SETS ===== -->
+
+	<fileset dir="${basedir}" id="war.package.fileset">
+		<exclude name="**/*.java"/>
+		<exclude name="dist/"/>
+    <exclude name="build.xml"/>
+    <exclude name="build.properties"/>
+    <exclude name=".*"/>
+	</fileset>
+		
+	<fileset dir="${basedir}" id="jar.package.fileset">
+		<exclude name="**/*.java"/>
+		<exclude name="bin/"/>
+		<exclude name="dist/"/>
+		<exclude name="build.xml"/>
+		<exclude name="build.properties"/>
+	</fileset>
+
+	<path id="classpath">		
+		<!-- <path refid="user-classpath"/> -->
+		<pathelement location="${buildPath}" />
+		
+		<fileset dir="${include-build-classpath}" includes="**/*.jar"/>
+
+		<dirset dir="${earLib}">
+			<include name="*-api.jar"/>
+		</dirset>
+
+		<!-- include jar,sar,war buildpaths in classpath -->
+		<dirset dir="${ear-sub-archives-dir}">
+			<include name="*.jar"/>
+			<include name="*.sar"/>
+			<include name="*.war/WEB-INF/classes"/>
+		</dirset>
+
+<!-- duplicate
+		<fileset dir="${ear-sub-archives-dir}">
+			<include name="*.jar"/>
+		</fileset>
+-->
+
+		<fileset dir="${jboss-home}/" includes="common/lib/**/*.jar"/> <!-- eap 5 -->
+		<fileset dir="${jboss-home}/" includes="lib/**/*.jar"/>
+		<fileset dir="${jboss-home}/" includes="client/**/*.jar"/>
+		<fileset dir="${jboss-home}/" includes="jboss-modules.jar"/> <!-- eap6 -->
+		<fileset dir="${jboss-server-dir}/" includes="lib/**/*.jar"/>
+		<fileset dir="${jboss-deploy-dir}/" includes="**/jsf*.jar"/>
+		<fileset dir="${jboss-deploy-dir}/" includes="**/portal-*.jar"/>
+    <fileset dir="${jboss-deploy-dir}/" includes="**/portlet-*.jar"/>
+    <fileset dir="${jboss-deploy-dir}/" includes="*jboss-portal*/**/*.jar"/>
+    <fileset dir="${jboss-deploy-dir}/" includes="*ejb3.deployer*/**/*.jar"/>
+    <fileset dir="${jboss-server-dir}/" includes="deployers/**/*.jar"/>
+
+		<!-- if parent dir is an EAR and contains a lib dir then add to classpath -->
+		<fileset dir="${earLib}">
+			<type type="file"/>
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${apiJarEarLib}">
+			<include name="**/*.jar"/>
+		</fileset>
+
+		<!-- add support for lib declared in build.properties -->
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+
+	</path>
+
+	<!-- =============================== -->
+	<path id="ordered-dirs"> 
+		<fileset dir="${basedir}" includes="lib/*-api.jar/build.xml" id="lib-api-dirs"/>
+		<fileset dir="${basedir}" includes="lib/*.jar/build.xml" excludes="*-api.jar/build.xml" id="lib-api-dirs2"/>
+		<fileset dir="${basedir}" includes="*-api.jar/build.xml" id="api-dirs"/>
+		<fileset dir="${basedir}" includes="*.jar/build.xml" id="jar-dirs">
+			<and>
+				<filename name="*.jar/build.xml"/>
+				<filename name="*-api.jar/build.xml" negate="true"/>
+				<filename name="*-ejb.jar/build.xml" negate="true"/>
+			</and>
+		</fileset>
+ 		<fileset dir="${basedir}" includes="*.sar/build.xml" id="sar-dirs"/>
+		<fileset dir="${basedir}" includes="*-ejb.jar/build.xml" id="ejb-dirs"/>
+ 		<fileset dir="${basedir}" includes="*.aop/build.xml" id="aop-dirs"/>
+		<fileset dir="${basedir}" includes="*.war/build.xml" id="war-dirs"/> 
+	</path> 
+
+<!-- =============================== -->
+
+	<!-- =====  MACRODEFS ===== -->
+	<macrodef name="iterate">
+		<attribute name="target"/>
+		<sequential>
+			<subant target="@{target}" inheritall="false" inheritrefs="false" verbose="false">
+				<!-- <reference refid="user-classpath" torefid="user-classpath"/> -->
+				<property name="caller" location="."/>
+				<property name="main.build" location="${ant.file.main}"/>
+				<path refid="ordered-dirs"/>
+    	</subant>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="check-env-set">
+		<attribute name="var"/>
+		<sequential>
+			<fail message="Please set the environment variable @{var}" unless="@{var}"/>
+		</sequential>
+	</macrodef>
+
+
+	<!-- =====  TARGETS ===== -->
+
+	<!-- [SB2] requires inits for everything -->
+	<!-- BEGIN OF INITS -->	
+	<!-- this property will allow only *-init methods needed to be created, all other will direct to jar-init -->
+	<condition property="init-type" value="jar" else="${archive-type}"><not><matches string="${archive-type}" pattern="^[ew]ar$"/></not></condition>
+
+	<macrodef name="init">
+		<sequential>
+			<check-env-set var="env.JBOSS_HOME"/>
+			<check-env-set var="jboss-server"/>
+
+			<echo>Running ${archive-type} build scripts : ${ant.file}</echo>
+			<fail message="Unable to build ${dirName}. It should be a jar, war, ear, ..."
+				unless="archive-type"/>
+
+			<antcall target="${init-type}-init"/>
+		</sequential>
+	</macrodef>
+
+	<target name="ear-init">
+			<!-- [SB1] - create ear's META-INF & lib & touch application.xml if it does not exist -->
+			<!-- moved to ear-init instead of package, because war build requires war-init to be called before packaging & all builds use jar build now -->
+			<mkdir dir="${basedir}/META-INF/"/>
+			<mkdir dir="${basedir}/lib/"/>
+			<touch file="${basedir}/META-INF/application.xml"/>
+	</target>
+
+	<target name="jar-init">
+		<mkdir dir="${basedir}/META-INF/"/>
+		<touch file="${basedir}/META-INF/MANIFEST.MF"/>
+	</target>
+
+	<target name="war-init">
+		<!-- [SB2] - create WEB-INF/classes, WEB-INF/lib if it does not exist -->
+		<mkdir dir="${basedir}/META-INF/"/>
+		<mkdir dir="${basedir}/WEB-INF/classes/"/>
+		<mkdir dir="${basedir}/WEB-INF/lib/"/>
+		<touch file="${basedir}/META-INF/MANIFEST.MF"/>
+	</target>
+
+	<!-- END OF INITS -->	
+
+	<target name="all">
+		<antcall target="build"/> 
+		<antcall target="package"/>
+	</target> 
+
+	<target name="clean">
+		<init/>
+
+		<delete dir="dist" includeemptydirs="true" quiet="true"/>
+
+		<delete verbose="true">
+			<fileset dir="." includes="**/*.class" />
+		</delete>
+		
+		<!-- <antcall target="${archive-type}-clean"/> --> <!-- Removed individual cleans -->
+
+		<iterate target="clean"/>
+	</target>
+
+	<target name="build" if="build">
+		<build/>
+		<!-- <property name="build" value="false"/> -->
+	</target>
+
+	<macrodef name="build">
+		<sequential>
+		<init/>		
+		<iterate target="build"/>
+
+<!--		<antcall target="${archive-type}-build"/> -->
+
+		<!-- everything except war and ear -->
+<!--
+		<property name="srcpath" value="${basedir}"/>
+		<property name="destdir" value="${basedir}"/>
+-->
+	
+		<!-- if war -->
+<!--
+		<property name="srcpath" value="${basedir}/WEB-INF/classes"/>
+		<property name="destdir" value="${basedir}/WEB-INF/classes"/>
+-->
+
+		<condition property="srcpath" value="${basedir}/WEB-INF/classes" else="${basedir}"><matches string="${archive-type}" pattern="war"/></condition>
+		<condition property="destdir" value="${basedir}/WEB-INF/classes" else="${basedir}"><matches string="${archive-type}" pattern="war"/></condition>
+
+		<echo>PROPS: ${srcpath} ${destdir}</echo>
+
+		<javac target="1.5" source="1.5" destdir="${destdir}" debug="${debug}" debuglevel="${debuglevel}">
+			<src path="${srcpath}"/>
+			<classpath refid="classpath"/>
+		</javac>
+		</sequential>
+	</macrodef>
+
+	<target name="package" depends="build">
+		<mkdir dir="dist"/>
+		<iterate target="package"/>
+
+		<antcall target="${archive-type}-package"/>
+
+	</target>
+
+<!-- JAR Build -->
+
+<!--
+	<target name="jar-build">
+		<sequential>
+			<javac destdir="." debug="${debug}" debuglevel="${debuglevel}">
+				<src path="${basedir}"/>
+				<classpath refid="classpath"/>
+			</javac>
+		</sequential>
+	</target>
+-->
+	<target name="jar-package">
+		<jar-package/>
+	</target>
+
+	<target name="aop-package">
+		<jar-package/>
+	</target>
+
+	<target name="beans-package">
+		<jar-package/>
+	</target>
+
+	<target name="sar-package">
+		<jar-package/>
+	</target>
+
+	<macrodef name="jar-package">
+		<sequential>
+<!--
+			<manifest file="META-INF/MANIFEST.MF" mode="update">
+				<attribute name="Class-Path" value="${manifest-class-path}"/>
+				<attribute name="Main-Class" value="${main-class}"/>
+			</manifest>
+-->
+
+			<jar destfile="dist/${archive.name}" manifest="META-INF/MANIFEST.MF">
+				<fileset refid="jar.package.fileset"/>
+			</jar>
+		</sequential>
+	</macrodef>
+
+<!--  WAR --> 
+<!--
+	<target name="war-all" depends="war-build, war-package"> </target>
+
+	<target name="war-clean"> </target>
+-->
+
+	<target name="war-build">
+
+		<javac destdir="WEB-INF/classes/" debug="${debug}" debuglevel="${debuglevel}">
+			<src path="WEB-INF/classes"/>
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+
+	<target name="war-package">
+		<mkdir dir="dist"/>
+
+<!--
+		<manifest file="META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Class-Path" value="${manifest-class-path}"/>
+		</manifest>
+-->
+
+
+		<war destfile="dist/${archive.name}" needxmlfile="false" manifest="META-INF/MANIFEST.MF">
+						<fileset refid="war.package.fileset"/>
+		</war>
+	</target>
+
+<!-- SAR & rar same as jar-->
+
+<!--  EAR -->
+	<uptodate property="ear-package.notrequired" targetfile="dist/${archive.name}" >
+		<srcfiles dir= "${basedir}" includes="**/dist/*"/>
+	</uptodate>
+
+	<target name="ear-all" depends="">
+		<echo>Calling sub archives build</echo>
+		<!--<antcall target="ear-build"/>-->
+		<antcall target="ear-package"/>
+	</target>
+
+<!--
+	<target name="ear-build">
+	</target>
+-->
+
+	<target name="ear-package" if="ear">
+		<sequential>
+		<!-- call it here, b/c ear does not have build called on it, putting it in package would be duplicated by the depends=build -->
+		<init/>		
+		<!-- call herre, b/c depends would delete the dist files before checking ear-package.notrequired -->
+		<delete dir="dist" includeemptydirs="true" quiet="true" includes="**/*"/>	
+
+			<mkdir dir="packaging"/>
+			<mkdir dir="packaging/lib/"/>
+
+			<copy flatten="true" todir="packaging">
+				<fileset dir="${basedir}">
+					<include name="*/dist/*"/>
+				</fileset>
+			</copy>
+
+			<copy flatten="true" todir="packaging/lib/">
+				 <fileset dir="${basedir}/lib">
+						<include name="*.jar/dist/*.jar"/> <!-- include dirs *.jar/dist/*.jar and any jar files in the lib -->
+						<include name="*.jar"/>
+					<type type="file"/>
+				 </fileset>
+			</copy>
+
+			<ear destfile="dist/${archive.name}" appxml="META-INF/application.xml">
+<!--
+				<manifest>
+					<attribute name="Class-Path" value="${manifest-class-path}"/>
+				</manifest>
+-->
+				<fileset dir="${basedir}">
+					<include name="*"/>
+					<type type="file"/>
+					<exclude name="build.xml"/>
+					<exclude name="build.properties"/>
+					<exclude name=".*"/>
+				</fileset>
+				<fileset dir="${basedir}" includes="META-INF/**/*"/>
+				<fileset dir="${basedir}/packaging/" includes="**/*"/> 
+			</ear>
+			<delete dir="packaging" includeemptydirs="true" quiet="true"/> 
+		</sequential>
+	</target>
+
+	<property name="distDir" location="./dist/"/>
+
+  <target name="deploy" depends="all">
+    <copy todir="${jboss-deploy-dir}" verbose="true">
+      <fileset dir="${distDir}" includes="**/*"/>
+    </copy>
+  </target>
+
+  <target name="undeploy">
+    <pathconvert property="undeploy.files" pathsep=" ">
+      <mapper type="regexp" from="^${distDir}/(.*)$" to="${jboss-deploy-dir}/\1"/>
+      <fileset dir="${distDir}" includes="**/*"/>
+    </pathconvert>
+    <echo>Undeploy ${undeploy.files}</echo>
+    <delete includeemptydirs="true" verbose="true">
+      <filelist files="${undeploy.files}" />
+    </delete>
+  </target>
+
+
+	<target name="test" depends="build">
+		<echo>${jboss-endorsed-dir}</echo>
+		<java classname="${test-client}" fork="true">
+        <jvmarg value="-Djava.endorsed.dirs=${jboss-endorsed-dir}"/>
+        <jvmarg value="-Djava.security.policy=${auth-conf}"/>
+        <jvmarg value="-Djava.awt.headless=true"/>
+<!--
+     -Djava.security.manager -Djava.security.policy=$JBOSS_HOME/bin/java.policy"
+-->
+      <classpath>
+        <path refid="classpath"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="junit" depends="build">
+    <!-- <echo>security-policy: ${security-policy}</echo> -->
+     <junit fork="false" showoutput="true" printsummary="true" filtertrace="false"
+      haltonfailure="false"
+      outputtoformatters="false">
+<!--
+      <jvmarg value="-Djava.rmi.server.logCalls=true"/>
+      <jvmarg value="-Djava.security.policy=${security-policy}"/>
+      <sysproperty key="java.security.policy" value="${security-policy}"/>
+
+      <jvmarg value="-Djava.security.auth.login.config=${auth-conf}"/>
+      <sysproperty key="java.security.auth.login.config" value="${auth-conf}"/>
+-->
+
+      <classpath refid="classpath"/>
+      <formatter type="plain" usefile="false"/>
+      <test name="${test-case}"/>
+    </junit>
+  </target>
+	
+	<target name="export-zip" depends="clean">
+    <mkdir dir="${dist}"/>
+    <zip destfile="${dist}/${archive-name}-src.zip">
+      <fileset dir="../">
+        <include name="${archive.name}/**/*"/>
+        <exclude name="${dist}"/>
+      </fileset>
+    </zip>
+  </target>
+
+	<target name="export-testcase" depends="clean">
+		<echo>This target will split this deployment up into java files and resources which is useful when moving it to the JBoss testsuite</echo>
+		<input message="Enter java source directory:" addproperty="testcase.source.dir"/>
+		<input message="Enter resource directory:" addproperty="testcase.resource.dir"/>
+ 
+		<echo>Copying java source to ${testcase.source.dir}</echo>
+		<mkdir dir="${testcase.source.dir}"/>
+		<copy todir="${testcase.source.dir}">
+			<fileset dir=".">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+
+		<echo>Copying resources to ${testcase.resource.dir}</echo>
+		<mkdir dir="${testcase.resource.dir}"/>
+		<copy todir="${testcase.resource.dir}">
+			<fileset dir=".">
+				<exclude name="**/*.java"/>
+				<exclude name="**/build.xml"/>
+				<exclude name="**/build.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="help">
+		<echo>archive-name = ${archive-name}</echo>
+		<echo>all - builds and packages the archive in the dist/ directory</echo>
+		<echo>build - builds the *.java files</echo>
+		<echo>clean - deletes the compiled classes *.java and the dist/ directory</echo>
+		<echo>deploy - deploys the archive in $JBOSS_HOME/server/$JBOSS_PROFILE - defaults to default, can be set in env variables or build.properties</echo>
+		<echo>export-zip - cleans then zips up the source in a zip file in dist/ directory</echo>
+		<echo>test - calls build, then runs a test client, the test client class is defined in build.properties property name: test-client</echo>
+		<echo>undeploy - undeploys the archive in $JBOSS_HOME/server/$JBOSS_SERVER - defaults to default, can be set in env variables or build.properties</echo>
+	</target>
+
+	<target name="mavenize-package" if="ear">
+		<sequential>
+		<!-- call it here, b/c ear does not have build called on it, putting it in package would be duplicated by the depends=build -->
+		<init/>		
+		<!-- call herre, b/c depends would delete the dist files before checking ear-package.notrequired -->
+		<!-- <delete dir="dist" includeemptydirs="true" quiet="true" includes="**/*"/>	-->
+
+			<!-- <copy flatten="true" todir="${dist}"> -->
+			<copy todir="${dist}">
+				<fileset dir="${basedir}/">
+					<include name="*/dist/**/*"/>
+				</fileset>
+				<regexpmapper from="^.*/dist/(.*)$$" to="\1"/>
+			</copy>
+
+<!--
+			<copy flatten="true" todir="packaging/lib/">
+				 <fileset dir="${basedir}/lib">
+						<include name="*.jar/dist/*.jar"/> 
+						<include name="*.jar"/>
+					<type type="file"/>
+				 </fileset>
+			</copy>
+-->
+<!--
+			<ear destfile="dist/${archive.name}" appxml="META-INF/application.xml">
+				<fileset dir="${basedir}">
+					<include name="*"/>
+					<type type="file"/>
+					<exclude name="build.xml"/>
+					<exclude name="build.properties"/>
+					<exclude name=".*"/>
+				</fileset>
+				<fileset dir="${basedir}" includes="META-INF/**/*"/>
+				<fileset dir="${basedir}/packaging/" includes="**/*"/> 
+			</ear>
+-->
+		</sequential>
+	</target>
+
+  <macrodef name="mavenize-ejb-template">
+    <attribute name="outputFile"/>
+
+    <attribute name="project-groupId"/>
+    <attribute name="project-artifactId"/>
+    <attribute name="project-version"/>
+    <attribute name="project-name"/>
+    <attribute name="project-description"/>
+
+    <attribute name="parent-groupId"/>
+    <attribute name="parent-artifactId"/>
+    <attribute name="parent-version"/>
+    <attribute name="parent-relativePath"/>
+
+    <attribute name="build-finalName"/>
+    <sequential>
+      <copy tofile="@{outputFile}/" file="ejb-pom.xml">
+        <filterset>
+          <filter token="project-groupId" value="@{project-groupId}"/>
+          <filter token="project-artifactId" value="@{project-artifactId}"/>
+          <filter token="project-version" value="@{project-version}"/>
+          <filter token="project-name" value="@{project-name}"/>
+          <filter token="project-description" value="@{project-description}"/>
+
+          <filter token="parent-groupId" value="@{parent-groupId}"/>
+          <filter token="parent-artifactId" value="@{parent-artifactId}"/>
+          <filter token="parent-version" value="@{parent-version}"/>
+          <filter token="parent-relativePath" value="@{parent-relativePath}"/>
+
+					<filter token="build-finalName" value="@{build-finalName}"/>
+        </filterset>
+      </copy>
+    </sequential>
+  </macrodef>
+
+	<target name="mavenize" depends="clean">
+		<mkdir dir="${dist}"/>
+
+		<iterate target="mavenize"/>
+
+		<!-- create a top level parent directory for the example that will have a pom.xml to call all the others ? -->
+
+		<!-- create directory without extension for each -->
+		<!-- using iterate, create them using archive-name in dist -->
+		<mkdir dir="${dist}/${archive-name}-${archive-type}"/>
+
+		<!-- note only jars that do not have a build.xml should be copied, everything else should be done via maven dependency -->
+		<!-- how to deal with jars in ear/lib, war/WEB-INF/lib ? Does maven structure have a lib directory to avoid pom.xml settings ? -->
+		<!-- war has my-webapp/src/main/webapp/WEB-INF , it looks like creating a lib dir and copying jars may work -->
+		<!-- ear has my-earapp/src/main/application/lib, it looks like creating a lib dir and copying jars may work -->
+
+		<echo>mavenize ${dist}/${archive-name}-${archive-type}/pom.xml</echo>
+		<mavenize-ejb-template outputFile="${dist}/${archive-name}-${archive-type}/pom.xml"
+		project-groupId="org.jboss.as.quickstarts" project-artifactId="${archive-name}-${archive-type}" 
+		project-version="7.1.2.Final-redhat-1" project-name="${archive-name}-${archive-type}" 
+		project-description="${archive-name}-${archive-type} description"
+		parent-groupId="org.jboss.as.quickstarts" parent-artifactId="${archive-name}" 
+		parent-version="7.1.2.Final-redhat-1" parent-relativePath="../pom.xml"
+		build-finalName="${archive-name}-${archive-type}"/>
+
+		<!-- copy META-INF to resources --> 
+		<mkdir dir="${dist}/${archive-name}-${archive-type}/src/main/resources/"/>
+		<copy todir="${dist}/${archive-name}-${archive-type}/src/main/resources/">
+			<fileset dir="${basedir}">
+				<include name="META-INF/**/*"/>
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dist}/${archive-name}-${archive-type}/src/main/java/"/>
+		<copy todir="${dist}/${archive-name}-${archive-type}/src/main/java/">
+			<fileset dir="${basedir}">
+				<exclude name="dist/**/*"/>
+				<exclude name="dist/"/>
+				<exclude name="META-INF/"/>
+				<exclude name="META-INF/**/*"/>
+				<exclude name="build.xml"/>
+				<exclude name="build.properties"/>
+				<exclude name="*pom.xml"/>
+				<exclude name="*.sh"/>
+			</fileset>
+		</copy>
+
+<!--
+			It looks like each module just needs to specify parent, packaging type, and artifact, then have the ear declare dependencies on the sub modules
+		   <parent>
+      <artifactId>ejb-remote-eap6</artifactId>
+      <groupId>ejb-remote-eap6</groupId>
+      <version>7.1.1.CR2</version>
+   </parent>
+
+   <artifactId>ejb-remote-eap6-ear</artifactId>
+   <packaging>ear</packaging>
+
+   <name>ejb-remote-eap6 EAR module</name>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>ejb-remote-eap6</groupId>
+         <artifactId>ejb-remote-eap6-web</artifactId>
+         <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>ejb-remote-eap6</groupId>
+         <artifactId>ejb-remote-eap6-ejb</artifactId>
+         <type>ejb</type>
+      </dependency>
+   </dependencies>
+-->
+
+
+		<!-- copy appropriate pom.xml, use the @ replace against a template -->
+		<touch file="${dist}/${archive-name}-${archive-type}/pom.xml"/>
+
+		<!-- create .project ? -->
+
+		<!-- This will only get called for an ear currently -->
+		<antcall target="mavenize-package"/>
+	</target>
+
+</project>
