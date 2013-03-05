@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<jboss-app>
+  <loader-repository>
+    ejb3.examples.jboss.com:loader=helloWorld.ear
+    <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+  </loader-repository>
+</jboss-app>
