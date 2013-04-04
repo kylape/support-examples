@@ -230,7 +230,7 @@ Adding custom lib directory in build.properties
     </sequential>
   </macrodef>
   <target name="all">
-    <antcall target="setup-example-two-way-ssl"/>
+    <!-- <antcall target="setup-example-two-way-ssl"/> -->
     <antcall target="build"/>
     <antcall target="package"/>
   </target>
