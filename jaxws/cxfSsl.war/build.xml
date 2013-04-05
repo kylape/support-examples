@@ -239,7 +239,8 @@ Adding custom lib directory in build.properties
     <delete dir="dist" includeemptydirs="true" quiet="true"/>
     <delete verbose="true">
       <fileset dir="." includes="**/*.class"/>
-      <fileset dir="." includes="**/*.keystore*"/>
+      <fileset dir="." includes="*.keystore*"/>
+      <fileset dir="." includes="*.cer"/>
     </delete>
     <!-- <antcall target="${archive-type}-clean"/> -->
     <!-- Removed individual cleans -->

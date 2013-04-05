@@ -1,0 +1,25 @@
+diff --git a/standalone/configuration/standalone.xml b/standalone/configuration/standalone.xml
+index e3dab8c..1acf791 100644
+--- a/standalone/configuration/standalone.xml
++++ b/standalone/configuration/standalone.xml
+@@ -262,6 +262,13 @@
+         </subsystem>
+         <subsystem xmlns="urn:jboss:domain:web:1.2" default-virtual-server="default-host" native="false">
+             <connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"/>
++            <connector name="https" protocol="HTTP/1.1" scheme="https" socket-binding="https">
++              <ssl name="ssl" password="jbossweb" ca-certificate-password="jbossweb"
++                   key-alias="cn=localhost, ou=gss, o=red hat, l=raleigh, st=nc, c=us" 
++                   certificate-key-file="${jboss.server.config.dir}/jbossweb.keystore" 
++                   ca-certificate-file="${jboss.server.config.dir}/jbossweb.keystore" 
++                   protocol="TLSv1" verify-client="true" />
++            </connector>
+             <virtual-server name="default-host" enable-welcome-root="true">
+                 <alias name="localhost"/>
+                 <alias name="example.com"/>
+@@ -310,4 +317,4 @@
+             <remote-destination host="localhost" port="25"/>
+         </outbound-socket-binding>
+     </socket-binding-group>
+-</server>
+\ No newline at end of file
++</server>

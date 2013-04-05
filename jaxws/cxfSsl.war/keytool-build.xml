@@ -6,20 +6,16 @@ version 0.1 June 1, 2012
 <project name="keytool-build" default="setup-example-two-way-ssl">
   <!-- =====  PROPERTIES ===== -->
   <property environment="env"/>
-
-	<!-- this will read in the properties which can be used by the targets -->
+  <!-- this will read in the properties which can be used by the targets -->
   <property file="keytool.properties"/>
-
   <property name="JAVA_HOME" location="${env.JAVA_HOME}"/>
   <property name="keytool" location="${JAVA_HOME}/bin/keytool"/>
-
-	<hostinfo prefix="hostInfo"/> <!-- .NAME, .DOMAIN, .ADDR4, .ADDR6 -->
-	<property name="hostname" value="${hostInfo.NAME}.${hostInfo.DOMAIN}"/>
-
-	<target name="init">
-			<echo>HostInfo: NAME=${hostInfo.NAME}, DOMAIN=${hostInfo.DOMAIN}, ADDR4=${hostInfo.ADDR4},ADDR6=${hostInfo.ADDR6}</echo>
-	</target>
-
+  <hostinfo prefix="hostInfo"/>
+  <!-- .NAME, .DOMAIN, .ADDR4, .ADDR6 -->
+  <property name="hostname" value="${hostInfo.NAME}.${hostInfo.DOMAIN}"/>
+  <target name="init">
+    <echo>HostInfo: NAME=${hostInfo.NAME}, DOMAIN=${hostInfo.DOMAIN}, ADDR4=${hostInfo.ADDR4},ADDR6=${hostInfo.ADDR6}</echo>
+  </target>
   <macrodef name="keytool-genkey">
     <attribute name="alias"/>
     <attribute name="keystore"/>
@@ -27,28 +23,27 @@ version 0.1 June 1, 2012
     <attribute name="storepass"/>
     <attribute name="dname"/>
     <sequential>
-			<exec executable="${keytool}">
-				<arg value="-genkey"/> 
-				<arg value="-alias"/>
-				<arg value="@{alias}"/>
-				<arg value="-keyalg"/>
-				<arg value="RSA"/>
-				<arg value="-keysize"/>
-				<arg value="1024"/>
-				<arg value="-keystore"/> 
-				<arg value="@{keystore}"/>
-				<arg value="-validity"/> 
-				<arg value="3650"/>
-				<arg value="-keypass"/> 
-				<arg value="@{keypass}"/>
-				<arg value="-storepass"/> 
-				<arg value="@{storepass}"/>
-				<arg value="-dname"/> 
-				<arg value="@{dname}" />
-			</exec>
+      <exec executable="${keytool}">
+        <arg value="-genkey"/>
+        <arg value="-alias"/>
+        <arg value="@{alias}"/>
+        <arg value="-keyalg"/>
+        <arg value="RSA"/>
+        <arg value="-keysize"/>
+        <arg value="1024"/>
+        <arg value="-keystore"/>
+        <arg value="@{keystore}"/>
+        <arg value="-validity"/>
+        <arg value="3650"/>
+        <arg value="-keypass"/>
+        <arg value="@{keypass}"/>
+        <arg value="-storepass"/>
+        <arg value="@{storepass}"/>
+        <arg value="-dname"/>
+        <arg value="@{dname}"/>
+      </exec>
     </sequential>
   </macrodef>
-
   <macrodef name="keytool-export">
     <attribute name="alias"/>
     <attribute name="keystore"/>
@@ -56,14 +51,13 @@ version 0.1 June 1, 2012
     <attribute name="storepass"/>
     <attribute name="file"/>
     <sequential>
-			<exec executable="${keytool}">
-				<arg line="-export -keystore @{keystore} -file @{file} -keypass @{keypass} -storepass @{storepass}"/>
-				<arg value="-alias"/> 
-				<arg value="@{alias}"/> 
-			</exec>
+      <exec executable="${keytool}">
+        <arg line="-export -keystore @{keystore} -file @{file} -keypass @{keypass} -storepass @{storepass}"/>
+        <arg value="-alias"/>
+        <arg value="@{alias}"/>
+      </exec>
     </sequential>
   </macrodef>
-
   <macrodef name="keytool-import">
     <attribute name="import-alias"/>
     <attribute name="import-file"/>
@@ -71,126 +65,48 @@ version 0.1 June 1, 2012
     <attribute name="keypass"/>
     <attribute name="storepass"/>
     <sequential>
-			<exec executable="${keytool}">
-				<arg line="-import -noprompt -v -trustcacerts -file @{import-file} -keystore @{keystore} -keypass @{keypass} -storepass @{storepass}"/>
-				<arg value="-alias"/>
-				<arg value="@{import-alias}"/> 
-			</exec>
+      <exec executable="${keytool}">
+        <arg line="-import -noprompt -v -trustcacerts -file @{import-file} -keystore @{keystore} -keypass @{keypass} -storepass @{storepass}"/>
+        <arg value="-alias"/>
+        <arg value="@{import-alias}"/>
+      </exec>
     </sequential>
   </macrodef>
-
   <macrodef name="two-way-ssl">
     <attribute name="server-alias"/>
     <attribute name="server-keypass"/>
     <attribute name="server-keystore"/>
     <attribute name="server-storepass"/>
-
     <attribute name="client-alias"/>
     <attribute name="client-keypass"/>
     <attribute name="client-keystore"/>
     <attribute name="client-storepass"/>
-
     <sequential>
       <echo>Generating Server's keystore</echo>
-      <keytool-genkey
-        alias="@{server-alias}"
-        keystore="@{server-keystore}"
-        keypass="@{server-keypass}"
-        storepass="@{server-storepass}"
-        dname="@{server-alias}"
-      />
-
+      <keytool-genkey alias="@{server-alias}" keystore="@{server-keystore}" keypass="@{server-keypass}" storepass="@{server-storepass}" dname="@{server-alias}"/>
       <echo>Exporting Server's public certificate</echo>
-      <keytool-export
-        alias="@{server-alias}"
-        keystore="@{server-keystore}"
-        keypass="@{server-keypass}"
-        storepass="@{server-storepass}"
-        file="@{server-keystore}.cer"
-      />
-
+      <keytool-export alias="@{server-alias}" keystore="@{server-keystore}" keypass="@{server-keypass}" storepass="@{server-storepass}" file="@{server-keystore}.cer"/>
       <echo>Generating Client's keystore</echo>
-      <keytool-genkey
-        alias="@{client-alias}"
-        keystore="@{client-keystore}"
-        keypass="@{client-keypass}"
-        storepass="@{client-storepass}"
-        dname="@{client-alias}"
-      />
-
+      <keytool-genkey alias="@{client-alias}" keystore="@{client-keystore}" keypass="@{client-keypass}" storepass="@{client-storepass}" dname="@{client-alias}"/>
       <echo>Exporting Client's public certificate</echo>
-      <keytool-export
-        alias="@{client-alias}"
-        keystore="@{client-keystore}"
-        keypass="@{client-keypass}"
-        storepass="@{client-storepass}"
-        file="@{client-keystore}.cer"
-      />
-
+      <keytool-export alias="@{client-alias}" keystore="@{client-keystore}" keypass="@{client-keypass}" storepass="@{client-storepass}" file="@{client-keystore}.cer"/>
       <echo>Importing Client's public certificate into Server's truststore</echo>
-      <keytool-import
-        import-alias="@{client-alias}"
-        import-file="@{client-keystore}.cer"
-
-        keystore="@{server-keystore}"
-        keypass="@{server-keypass}"
-        storepass="@{server-storepass}"
-      />		
-
+      <keytool-import import-alias="@{client-alias}" import-file="@{client-keystore}.cer" keystore="@{server-keystore}" keypass="@{server-keypass}" storepass="@{server-storepass}"/>
       <echo>Importing Server's public certificate into Client's truststore</echo>
-      <keytool-import
-        import-alias="@{server-alias}"
-        import-file="@{server-keystore}.cer"
-
-        keystore="@{client-keystore}"
-        keypass="@{client-keypass}"
-        storepass="@{client-storepass}"
-      />		
-
-      <echo>$JBOSS_HOME/server/$JBOSS_CONFIG/deploy/jbossweb.sar/server.xml and add a connector, specify the keystore/truststore options.</echo>
-      <echo>Note in the example, the keystore is also used as the truststore.</echo>
-
-      <echoxml>	
-        <Connector port="8443" address="${jboss.bind.address}"
-          protocol="HTTP/1.1" SSLEnabled="true"
-          keystoreFile="${jboss.server.home.dir}/conf/jbossweb.keystore" keystorePass="jbossweb"
-          truststoreFile="${jboss.server.home.dir}/conf/jbossweb.keystore" truststorePass="jbossweb"
-          maxThreads="150" scheme="https" secure="true"
-          clientAuth="true" sslProtocol="TLS" />
-      </echoxml>
-
-      <echo>Note replace the keystorePass and truststorePass with the appropriate values if you changed them in the properties</echo>
-
+      <keytool-import import-alias="@{server-alias}" import-file="@{server-keystore}.cer" keystore="@{client-keystore}" keypass="@{client-keypass}" storepass="@{client-storepass}"/>
     </sequential>
   </macrodef>
-
-	<target name="setup-example-two-way-ssl">
-
-		<property name="client-hostname" value="client"/>
-		<property name="browser-hostname" value="browser"/>
-
-		<property name="server-alias" value="cn=${hostname}, ou=GSS, o=Red Hat, l=Raleigh, st=NC, c=US"/>
-		<property name="server-keystore" value="jbossweb.keystore"/>
-		<property name="server-keypass" value="jbossweb"/>
-		<property name="server-storepass" value="jbossweb"/>
-
-		<property name="client-alias" value="cn=${client-hostname}, ou=GSS, o=Red Hat, l=Raleigh, st=NC, c=US"/>
-		<property name="client-keystore" value="client.keystore"/>
-		<property name="client-keypass" value="client"/>
-		<property name="client-storepass" value="client"/>
-
-		<two-way-ssl
-			server-alias="${server-alias}"
-			server-keystore="${server-keystore}"
-			server-keypass="${server-keypass}"
-			server-storepass="${server-storepass}"
-
-			client-alias="${client-alias}"
-			client-keystore="${client-keystore}"
-			client-keypass="${client-keypass}"
-			client-storepass="${client-storepass}"
-		/>
-
-	</target>
-
+  <target name="setup-example-two-way-ssl">
+    <property name="client-hostname" value="client"/>
+    <property name="browser-hostname" value="browser"/>
+    <property name="server-alias" value="cn=${hostname}, ou=GSS, o=Red Hat, l=Raleigh, st=NC, c=US"/>
+    <property name="server-keystore" value="jbossweb.keystore"/>
+    <property name="server-keypass" value="jbossweb"/>
+    <property name="server-storepass" value="jbossweb"/>
+    <property name="client-alias" value="cn=${client-hostname}, ou=GSS, o=Red Hat, l=Raleigh, st=NC, c=US"/>
+    <property name="client-keystore" value="client.keystore"/>
+    <property name="client-keypass" value="client"/>
+    <property name="client-storepass" value="client"/>
+    <two-way-ssl server-alias="${server-alias}" server-keystore="${server-keystore}" server-keypass="${server-keypass}" server-storepass="${server-storepass}" client-alias="${client-alias}" client-keystore="${client-keystore}" client-keypass="${client-keypass}" client-storepass="${client-storepass}"/>
+  </target>
 </project>
