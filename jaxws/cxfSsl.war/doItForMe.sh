@@ -9,6 +9,9 @@
 
 ant setup-example-two-way-ssl
 ./installSslConnector.sh
+if [ $? -gt 0 ]; then
+  exit $?
+fi
 echo "Starting JBoss..."
 $JBOSS_HOME/bin/standalone.sh > console.log &
 sleep 10
