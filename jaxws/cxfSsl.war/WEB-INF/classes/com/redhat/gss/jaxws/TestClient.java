@@ -62,21 +62,26 @@ public class TestClient
     TLSClientParameters tlsParams = new TLSClientParameters();  
     tlsParams.setDisableCNCheck(true);  
     tlsParams.setSecureSocketProtocol("TLSv1");
+
+    //This call is only available and/or required in EAP 6.0.1+
     tlsParams.setCertAlias(certAlias);
 
-    KeyStore keyStore = KeyStore.getInstance("JKS");  
-    String trustpass = "client"; //provide trust pass
-
-    File truststore = new File("client.keystore"); //provide your truststore  
-    keyStore.load(new FileInputStream(truststore), trustpass.toCharArray());  
+    //Set up the truststore for CXF
+    KeyStore trustStore = KeyStore.getInstance("JKS");  
+    String trustpass = "client"; 
+    File truststoreFile = new File("client.keystore"); 
+    trustStore.load(new FileInputStream(truststoreFile), trustpass.toCharArray());  
     TrustManagerFactory trustFactory =  
         TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());  
-    trustFactory.init(keyStore);  
+    trustFactory.init(trustStore);  
     TrustManager[] tm = trustFactory.getTrustManagers();  
     tlsParams.setTrustManagers(tm);
 
-    truststore = new File("client.keystore"); //provide your client store  
-    keyStore.load(new FileInputStream(truststore),  trustpass.toCharArray());  
+    //Set up the keystore for CXF
+    KeyStore keyStore = KeyStore.getInstance("JKS");  
+    String keypass = "client"; 
+    File keystoreFile = new File("client.keystore"); 
+    keyStore.load(new FileInputStream(keystoreFile),  keypass.toCharArray());  
     KeyManagerFactory keyFactory =  
         KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
     keyFactory.init(keyStore, trustpass.toCharArray());  
