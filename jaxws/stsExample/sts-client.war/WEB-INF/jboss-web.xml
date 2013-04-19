@@ -1,0 +1,3 @@
+<jboss-web>
+  <security-domain>java:/jaas/picketlink-client</security-domain>
+</jboss-web>

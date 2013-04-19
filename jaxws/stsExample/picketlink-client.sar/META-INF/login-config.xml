@@ -1,0 +1,41 @@
+<?xml version='1.0'?>
+<!DOCTYPE policy PUBLIC
+      "-//JBoss//DTD JBOSS Security Config 3.0//EN"
+      "http://www.jboss.org/j2ee/dtd/security_config.dtd">
+
+<policy>
+    
+  <application-policy name="picketlink-client">
+    <authentication>
+      <login-module code="org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule" flag="required">
+
+        <!-- this property identifies the properties file that will be used to
+             establish communication with the external security token service
+             -->
+        <module-option name="configFile">
+          META-INF/example-sts-client.properties
+        </module-option>
+
+        <!-- set it to true if you require invalidation of JBoss Auth Cache at
+             SAML Principal expiration. -->
+        <!-- <module-option name="cache.invalidation"> </module-option> -->
+
+        <!-- name of the security domain where this login module is configured.
+             This is only required if the cache.invalidation option is
+             configured. -->
+        <!-- <module-option name="jboss.security_domain"> </module-option> -->
+
+        <!-- a comma separated list of strings that define the attributes in
+             SAML assertion for user roles -->
+        <!-- <module-option name="roleKey"> </module-option> -->
+
+        <!-- if you want to validate the assertion locally for signature and
+             expiry -->
+        <!-- <module-option name="localValidation"> </module-option> -->
+
+      </login-module>
+    </authentication>
+  </application-policy>
+
+</policy>
+
