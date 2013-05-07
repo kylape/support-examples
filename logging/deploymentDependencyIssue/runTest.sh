@@ -12,7 +12,7 @@ fi
 
 echo "Cleaning logs..."
 rm *.log
-cd deploymentB.rar
+cd deploymentB.jar
 ant deploy
 cd ../deploymentA.war
 ant deploy
@@ -34,5 +34,6 @@ tail my-log4j.log
 echo "================================================"
 echo
 JBOSS_PID=`jps | grep jboss-modules | cut -f 1 -d " "`
+echo "Killing JBoss..."
 echo "kill $JBOSS_PID"
 kill $JBOSS_PID
