@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+  <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="File" value="my-log4j.log"/>
+    <param name="Append" value="false"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="---ZZZ--- %d{ISO8601} [%t] [%F] %p %c %x - %m%n"/>
+    </layout>
+  </appender>
+  <logger name="com.redhat.gss.log.test" additivity="true">
+    <level value="INFO"/>
+  </logger>
+  <root>
+    <priority value="WARN"/>
+    <appender-ref ref="file"/>
+  </root>
+</log4j:configuration>
