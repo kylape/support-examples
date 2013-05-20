@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:jaxws="http://cxf.apache.org/jaxws" 
+       xmlns:cxf="http://cxf.apache.org/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+                           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+  <bean id="hello" class="com.redhat.gss.jaxws.HelloWS">
+    <property name="test" ref="test"/>
+  </bean>
+  <bean id="goodbye" class="com.redhat.gss.jaxws.GoodbyeWS">
+    <property name="test" ref="test"/>
+  </bean>
+
+  <context:annotation-config/>
+  <bean id="test" class="com.redhat.gss.jaxws.Test"/>
+
+  <jaxws:endpoint id="HelloWS" 
+                  address="http://localhost:8080/twoEndpointsCxfSpring/hello" 
+                  implementor="#hello"
+                  implementorClass="com.redhat.gss.jaxws.HelloWS">
+    <jaxws:invoker>
+      <bean class="org.jboss.wsf.stack.cxf.InvokerJSE"/>
+    </jaxws:invoker>
+    <jaxws:features>
+      <cxf:logging/>
+    </jaxws:features>
+
+</jaxws:endpoint>
+
+  <jaxws:endpoint id="GoodbyeWS" 
+                  address="http://localhost:8080/twoEndpointsCxfSpring/goodbye" 
+                  implementor="#goodbye"
+                  implementorClass="com.redhat.gss.jaxws.GoodbyeWS">
+    <jaxws:invoker>
+      <bean class="org.jboss.wsf.stack.cxf.InvokerJSE"/>
+    </jaxws:invoker>
+    <jaxws:features>
+      <cxf:logging/>
+    </jaxws:features>
+  </jaxws:endpoint>
+</beans>
