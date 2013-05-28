@@ -25,13 +25,20 @@ public class TestClient
       final ClientEndpoint port = service.getPort(ClientEndpoint.class);
       public void run()
       {
-        for(int i=0; i<500; i++)
-          port.invokeHelloWorld("Kyle");
+        for(int i=0; i<200; i++)
+          try
+          {
+            port.invokeHelloWorld("Kyle");
+          }
+          catch(Exception e)
+          {
+            //ignore
+          }
           System.out.print(".");
       }
     };
 
-    for(int i=0; i<100; i++)
+    for(int i=0; i<300; i++)
       new Thread(r).start();
   }
 }
