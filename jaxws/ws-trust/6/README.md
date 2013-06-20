@@ -17,7 +17,7 @@ request -> SAML2Handler -> WSAuthenticationHandler -> SAML2STSLoginModule -> STS
 
 To install:
 
-- Set `$JBOSS\_HOME` and make sure `ant` is on your `PATH`.
+- Set `$JBOSS_HOME` and make sure `ant` is on your `PATH`.
 - I used the STS provided by the Picketlink quickstart project [found here](https://github.com/picketlink2/picketlink-quickstarts).
 
   Once in the root folder of the git project, I check out the `v2.1.6.Final`
@@ -30,7 +30,7 @@ To install:
   `add-user.sh` script in the bin directory (I used admin/admin).  This simplified
   the deployment a bit.
 
-- I added the 'picketlink-sts' security domain that will be used by my target
+- I added the `picketlink-sts` security domain that will be used by my target
   endpoint (i.e. Service Provider (SP)):
 
   ```
