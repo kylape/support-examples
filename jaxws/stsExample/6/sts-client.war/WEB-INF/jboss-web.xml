@@ -1,0 +1,3 @@
+<jboss-web>
+  <security-domain>picketlink-sts</security-domain>
+</jboss-web>

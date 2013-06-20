@@ -1,0 +1,18 @@
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+  <servlet>
+    <servlet-name>TestEndpoint</servlet-name>
+    <servlet-class>com.redhat.gss.sts.TestEndpointImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TestEndpoint</servlet-name>
+    <url-pattern>/test</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>StsClient</servlet-name>
+    <servlet-class>com.redhat.gss.sts.StsClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StsClient</servlet-name>
+    <url-pattern>/client</url-pattern>
+  </servlet-mapping>
+</web-app>
