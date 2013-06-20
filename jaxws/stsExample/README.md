@@ -1,7 +1,7 @@
 ###Picketlink WS-Trust STS example
 
 This is an example of how to set up a WS-Trust scenario using Picketlink STS and JBossWS.
-This example is currently geared for EAP 5.2+.
+This example is geared for EAP 5.2+.
 
 High level flow of request:
 
