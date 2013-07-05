@@ -5,31 +5,22 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import org.jboss.logging.Logger;
 
 @Path("/")
-@javax.ejb.Stateless
-public class EscapedCharTest
+public interface EscapedCharTest
 {
-  private static Logger log = Logger.getLogger(EscapedCharTest.class);
-
   @GET
   @Produces("application/json")
-  public TransferObject hello()
-  {
-    TransferObject to = new TransferObject();
-    to.setName("Look, a quote! \"");
-    to.setType("Hey, it's a backslash: \\");
-    return to;
-  }
+  public TransferObject hello();
 
   @POST
   @Consumes("application/json")
   @Produces("application/json")
-  public TransferObject helloPost(String string)
-  {
-    log.info(string);
-    return hello();
-  }
+  public TransferObject helloPost(String string);
+
+  @POST
+  @Consumes("application/json")
+  @Produces("application/json")
+  public TransferObject helloPost(TransferObject string);
 }
 

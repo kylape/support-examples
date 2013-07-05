@@ -34,5 +34,10 @@ public class TransferObject
   {
     this.name = name;
   }
+
+  public String toString()
+  {
+    return "TransferObject: [Name=" + name + "],[Type=" + type + "]";
+  }
 }
 
