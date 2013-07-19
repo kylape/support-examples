@@ -9,6 +9,7 @@ import javax.xml.transform.stream.StreamResult;
  
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient.SecurityInfo;
+import org.picketlink.identity.federation.core.wstrust.wrappers.RequestSecurityToken;
 import org.picketlink.identity.federation.core.wstrust.WSTrustException;
 import org.picketlink.identity.federation.core.wstrust.plugins.saml.SAMLUtil;
 import org.w3c.dom.Element;
@@ -28,6 +29,7 @@ import java.util.List;
 import javax.xml.ws.handler.Handler;
 import org.picketlink.trust.jbossws.SAML2Constants;
 import org.picketlink.trust.jbossws.handler.SAML2Handler;
+import java.net.URI;
 
 public class StsClient extends HttpServlet
 {
@@ -65,13 +67,17 @@ public class StsClient extends HttpServlet
     // create a WSTrustClient instance.
     WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", 
       "http://localhost:8080/picketlink-sts/PicketLinkSTS", 
-      new SecurityInfo("admin", "admin"));
+      new SecurityInfo("sts", "RedHat13#"));
     
     // issue a SAML assertion using the client API.
     Element assertion = null;
     try 
     {
-      assertion = client.issueToken(SAMLUtil.SAML2_TOKEN_TYPE);
+      URI keyType = URI.create("http://docs.oasis-open.org/ws-sx/ws-trust/200512/PublicKey");
+      RequestSecurityToken request = new RequestSecurityToken();
+      request.setTokenType(URI.create(SAMLUtil.SAML2_TOKEN_TYPE));
+      request.setKeyType(keyType);
+      assertion = client.issueToken(request);
     }
     catch (WSTrustException wse)
     {

@@ -20,15 +20,17 @@ To install:
 - Set `$JBOSS_HOME` and make sure `ant` is on your `PATH`.
 - I used the STS provided by the Picketlink quickstart project [found here](https://github.com/picketlink2/picketlink-quickstarts).
 
-  Once in the root folder of the git project, I check out the `v2.1.6.Final`
-  tag and then nagivate to `ws-trust/picketlink-sts` to build the STS using
-  `mvn install`.  I take the `picketlink-sts-2.1.6.Final-jboss-as7.war` from
-  the target folder and deploy it to JBoss.
+  - Once in the root folder of the git project, I check out the `v2.1.6.Final`
+    tag and then nagivate to `ws-trust/picketlink-sts` to build the STS using
+    `mvn install`.  I take the `picketlink-sts-2.1.6.Final-jboss-as7.war` from
+    the target folder and deploy it to JBoss.
 
-  I changed the security domain used by the STS from
-  `picketlink-sts` to `other` and added a user to this domain via the
-  `add-user.sh` script in the bin directory (I used admin/admin).  This simplified
-  the deployment a bit.
+  - I changed the security domain used by the STS from
+    `picketlink-sts` to `other`. 
+
+  - I added a user to this domain via the `add-user.sh` script in the bin
+    directory (I used `sts`/`RedHat13#` and added the role `JBossAdmin` to the
+    user).
 
 - I added the `picketlink-sts` security domain that will be used by my target
   endpoint (i.e. Service Provider (SP)):
