@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To the extent possible under law, Red Hat, Inc. has dedicated all copyright 
+  to this software to the public domain worldwide, pursuant to the CC0 Public 
+  Domain Dedication. This software is distributed without any warranty.  See 
+  <http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+  <servlet>
+    <servlet-name>ClientEndpoint</servlet-name>
+    <servlet-class>com.redhat.gss.jaxws.ClientEndpoint</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClientEndpoint</servlet-name>
+    <url-pattern>/clientEndpoint</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>HelloWS</servlet-name>
+    <servlet-class>com.redhat.gss.jaxws.HelloWSImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HelloWS</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+</web-app>
