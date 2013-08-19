@@ -21,7 +21,7 @@ public class ClientEndpoint
       Client proxy = ClientProxy.getClient(port);
       proxy.getOutInterceptors().add(new org.apache.cxf.interceptor.LoggingOutInterceptor());
       proxy.getRequestContext().put(Message.ENCODING, "ISO-8859-1");
-      return port.hello("Kyle");
+      return port.hello("Kylé");
     }
     catch(Exception e)
     {
