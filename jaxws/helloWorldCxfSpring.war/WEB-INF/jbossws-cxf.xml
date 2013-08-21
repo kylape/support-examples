@@ -7,8 +7,8 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
        http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
-  <jaxws:endpoint id="HelloWS" 
-                  address="http://localhost:8080/helloWorld/hello" 
+  <jaxws:endpoint id="hello" 
+                  address="http://localhost:8080/helloWorldCxfSpring/hello" 
                   implementor="com.redhat.gss.jaxws.HelloWS">
     <jaxws:features>
       <cxf:logging/>
