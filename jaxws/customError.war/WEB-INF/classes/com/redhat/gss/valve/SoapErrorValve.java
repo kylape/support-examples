@@ -47,7 +47,6 @@ public class SoapErrorValve extends ErrorReportValve
   @Override
   public void report(Request request, Response response, Throwable exception)
   {
-    log.info("Hello there!");
     // Do nothing on non-HTTP responses
     int statusCode = response.getStatus();
 
@@ -77,7 +76,7 @@ public class SoapErrorValve extends ErrorReportValve
     }
     catch(Exception e)
     {
-      log.warn("Error creating SOAP fault", e);
+      log.debug("Error creating SOAP fault", e);
       //Delegate to the other ErrorReportValve
       return;
     }
