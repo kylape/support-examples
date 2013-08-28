@@ -170,16 +170,16 @@ public class SoapErrorValve extends ErrorReportValve
       return "HTTP " + statusCode;
   }
 
-	private SOAPMessage createNewSoapMessage() 
-	{
-		try 
-		{
-			MessageFactory factory = MessageFactory.newInstance();
-			return factory.createMessage();
-		} 
-		catch (SOAPException e) 
-		{
-			throw new RuntimeException("Error composing message: " + e.getMessage(), e);
-		}
-	}
+  private SOAPMessage createNewSoapMessage() 
+  {
+    try 
+    {
+      MessageFactory factory = MessageFactory.newInstance();
+      return factory.createMessage();
+    } 
+    catch (SOAPException e) 
+    {
+      throw new RuntimeException("Error composing message: " + e.getMessage(), e);
+    }
+  }
 }
