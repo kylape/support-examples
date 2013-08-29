@@ -40,7 +40,7 @@ public class TestClient
     Service service = Service.create(wsdl, qname);
     HelloWS port = service.getPort(HelloWS.class);
     ((BindingProvider)port).getRequestContext()
-      .put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,"https://localhost:8443/cxfSsl/hello");
+      .put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,"https://127.0.0.1:8443/cxfSsl/hello");
 
     setupSsl(getHttpConduit(port));
 
@@ -60,7 +60,7 @@ public class TestClient
   {
     final String certAlias = "cn=client, ou=gss, o=red hat, l=raleigh, st=nc, c=us";
     TLSClientParameters tlsParams = new TLSClientParameters();  
-    tlsParams.setDisableCNCheck(true);  
+    // tlsParams.setDisableCNCheck(true);  
     tlsParams.setSecureSocketProtocol("TLSv1");
 
     //This call is only available and/or required in EAP 6.0.1+
@@ -88,13 +88,13 @@ public class TestClient
     KeyManager[] km = keyFactory.getKeyManagers();  
     tlsParams.setKeyManagers(km);
 
-    FiltersType filter = new FiltersType();  
-    filter.getInclude().add(".*_EXPORT_.*");  
-    filter.getInclude().add(".*_EXPORT1024_.*");  
-    filter.getInclude().add(".*_WITH_DES_.*");  
-    filter.getInclude().add(".*_WITH_NULL_.*");  
-    filter.getExclude().add(".*_DH_anon_.*");  
-    tlsParams.setCipherSuitesFilter(filter); //set all the needed include and exclude filters.
+    // FiltersType filter = new FiltersType();  
+    // filter.getInclude().add(".*_EXPORT_.*");  
+    // filter.getInclude().add(".*_EXPORT1024_.*");  
+    // filter.getInclude().add(".*_WITH_DES_.*");  
+    // filter.getInclude().add(".*_WITH_NULL_.*");  
+    // filter.getExclude().add(".*_DH_anon_.*");  
+    // tlsParams.setCipherSuitesFilter(filter); //set all the needed include and exclude filters.
 
     httpConduit.setTlsClientParameters(tlsParams);  
   }
