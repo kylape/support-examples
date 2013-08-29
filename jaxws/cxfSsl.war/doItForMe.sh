@@ -29,7 +29,7 @@ $JBOSS_HOME/bin/standalone.sh -Djavax.net.debug=all > console.log &
 sleep 10
 echo "Adding HTTPS connector..."
 $JBOSS_HOME/bin/jboss-cli.sh -c --file=installHttps.cli
-$JBOSS_HOME/bin/jboss-cli.sh -c --commands="deploy dist/cxfSsl.war"
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands="deploy dist/cxfSsl.war --force"
 ant test
 
 echo "Removing HTTPS connector..."
