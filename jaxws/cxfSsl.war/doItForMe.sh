@@ -15,11 +15,10 @@ if [ "x$JBOSS_HOME" = "x" ]; then
   exit 1
 fi
 
+ant #Build the project
+
 echo "Copying jbossweb.keystore"
 cp jbossweb.keystore $JBOSS_HOME/standalone/configuration
-
-cp $JBOSS_HOME/standalone/configuration/standalone.xml .
-patch -p1 -d $JBOSS_HOME < sslConnector.diff
 
 if [ $? -gt 0 ]; then
   exit $?
@@ -28,12 +27,16 @@ fi
 echo "Starting JBoss..."
 $JBOSS_HOME/bin/standalone.sh -Djavax.net.debug=all > console.log &
 sleep 10
-ant deploy
-sleep 7
+echo "Adding HTTPS connector..."
+$JBOSS_HOME/bin/jboss-cli.sh -c --file=installHttps.cli
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands="deploy dist/cxfSsl.war"
 ant test
+
+echo "Removing HTTPS connector..."
+$JBOSS_HOME/bin/jboss-cli.sh -c --file=uninstallHttps.cli
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands="undeploy cxfSsl.war"
 echo "Stopping JBoss..."
 kill `jps | grep "jboss-modules.jar" | cut -f 1 -d " "`
 
 #Clean things up so this script can be re-run more easily
-mv standalone.xml $JBOSS_HOME/standalone/configuration
 rm jbossweb.keystore* client.keystore*

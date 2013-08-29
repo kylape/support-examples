@@ -1,0 +1,3 @@
+/subsystem=web/connector=https:add(protocol="HTTP/1.1",socket-binding="https",scheme="https")
+/subsystem=web/connector=https/ssl=configuration:add(name="ssl",password="jbossweb",ca-certificate-password="jbossweb",key-alias="cn=localhost, ou=gss, o=red hat, l=raleigh, st=nc, c=us",ca-certificate-file="${jboss.server.config.dir}/jbossweb.keystore",certificate-key-file="${jboss.server.config.dir}/jbossweb.keystore",protocol="TLSv1",verify-client="true")
+:reload
