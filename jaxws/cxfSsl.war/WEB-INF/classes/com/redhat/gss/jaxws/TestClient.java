@@ -1,3 +1,4 @@
+
 package com.redhat.gss.jaxws;
 
 import java.io.File;
@@ -71,8 +72,10 @@ public class TestClient
     //Set up the truststore for CXF
     KeyStore trustStore = KeyStore.getInstance("JKS");  
     String trustpass = "client"; 
-    File truststoreFile = new File("client.keystore"); 
-    trustStore.load(new FileInputStream(truststoreFile), trustpass.toCharArray());  
+    // File truststoreFile = new File("client.keystore"); 
+    // trustStore.load(new FileInputStream(truststoreFile), trustpass.toCharArray());  
+    URL truststoreUrl = Thread.currentThread().getContextClassLoader().getResource("/client.keystore");
+    trustStore.load(truststoreUrl.openStream(), trustpass.toCharArray());  
     TrustManagerFactory trustFactory =  
         TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());  
     trustFactory.init(trustStore);  
@@ -82,8 +85,10 @@ public class TestClient
     //Set up the keystore for CXF
     KeyStore keyStore = KeyStore.getInstance("JKS");  
     String keypass = "client"; 
-    File keystoreFile = new File("client.keystore"); 
-    keyStore.load(new FileInputStream(keystoreFile),  keypass.toCharArray());  
+    // File keystoreFile = new File("client.keystore"); 
+    // keyStore.load(new FileInputStream(keystoreFile),  keypass.toCharArray());  
+    URL keystoreUrl = Thread.currentThread().getContextClassLoader().getResource("/client.keystore");
+    keyStore.load(keystoreUrl.openStream(),  keypass.toCharArray());  
     KeyManagerFactory keyFactory =  
         KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
     keyFactory.init(keyStore, trustpass.toCharArray());  

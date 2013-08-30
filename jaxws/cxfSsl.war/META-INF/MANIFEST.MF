@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.8.2
 Created-By: 1.6.0_37-b06-434-11M3909 (Apple Inc.)
-Dependencies: org.apache.cxf,org.jboss.modules
+Dependencies: org.apache.cxf,org.jboss.modules,org.apache.cxf.impl
 Class-Path: 
 
