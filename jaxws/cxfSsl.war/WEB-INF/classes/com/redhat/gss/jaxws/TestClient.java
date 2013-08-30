@@ -1,4 +1,3 @@
-
 package com.redhat.gss.jaxws;
 
 import java.io.File;
@@ -46,8 +45,17 @@ public class TestClient
       .put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,"https://127.0.0.1:8443/cxfSsl/hello");
 
     setupSsl(getHttpConduit(port));
+    setupHttpPolicy(getHttpConduit(port));
 
     log.info(port.hello("Kyle"));
+  }
+
+  public void setupHttpPolicy(HTTPConduit httpConduit) throws Exception
+  {
+    HTTPClientPolicy policy = new HTTPClientPolicy();
+    policy.setReceiveTimeout(10000L);
+    policy.setAllowChunking(false);
+    httpConduit.setClient(policy);
   }
 
   public HTTPConduit getHttpConduit(Object port)
