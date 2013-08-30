@@ -30,6 +30,8 @@ public class TestClient
 
   public static void main(String[] args) throws Exception
   {
+    System.setProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager");
+    Class.forName("java.util.logging.LogManager");
     new TestClient().invoke();
   }
 

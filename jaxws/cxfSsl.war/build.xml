@@ -412,6 +412,7 @@ Adding custom lib directory in build.properties
     <echo>java -jar ${jboss-home}/jboss-modules.jar -mp ${jboss-home}/modules -cp ${buildPath} -dep ${module-deps} ${test-client}</echo>
     <java jar="${jboss-home}/jboss-modules.jar" fork="true">
       <jvmarg value="-Djava.awt.headless=true"/>
+      <jvmarg value="-Dlogging.configuration=file://${basedir}/logging.properties"/>
       <arg value="-mp"/>
       <arg value="${jboss-home}/modules"/>
       <arg value="-cp"/>
