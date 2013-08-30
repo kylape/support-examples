@@ -25,8 +25,8 @@ if [ $? -gt 0 ]; then
 fi
 
 echo "Starting JBoss..."
-$JBOSS_HOME/bin/standalone.sh -Djavax.net.debug=all > console.log &
-sleep 10
+$JBOSS_HOME/bin/standalone.sh -Djavax.net.debug=all > server.log &
+sleep 5
 echo "Adding HTTPS connector..."
 $JBOSS_HOME/bin/jboss-cli.sh -c --file=installHttps.cli
 
