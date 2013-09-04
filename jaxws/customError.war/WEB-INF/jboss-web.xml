@@ -1,6 +1,0 @@
-<jboss-web>
-  <security-domain>other</security-domain>
-    <valve> 
-        <class-name>com.redhat.gss.valve.SoapErrorValve</class-name>
-    </valve>
-</jboss-web>
