@@ -1,0 +1,9 @@
+<jboss-web>
+  <security-domain>JBossWS</security-domain>
+
+  <!-- uncomment these lines to make it work for EAP 6 -->
+  <!-- <valve> --> 
+  <!--   <class-name>com.redhat.gss.valve.SoapErrorValve</class-name> -->
+  <!-- </valve> -->
+
+</jboss-web>
