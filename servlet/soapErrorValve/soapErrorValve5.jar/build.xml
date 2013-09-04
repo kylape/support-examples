@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To the extent possible under law, Red Hat, Inc. has dedicated all copyright 
+  to this software to the public domain worldwide, pursuant to the CC0 Public 
+  Domain Dedication. This software is distributed without any warranty.  See 
+  <http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
 <!-- 
 author: Brad Maxwell
 Simplified Build
@@ -38,7 +44,7 @@ Adding custom lib directory in build.properties
 	<condition property="jboss-server-dir" value="${jboss-home}/${jboss-server}" else="${jboss-home}/server/${jboss-server}"><isset property="AS7"/></condition>
 
 	<condition property="jboss-deploy-dir" value="${jboss-server-dir}/deployments/" else="${jboss-server-dir}/deploy/"><isset property="AS7"/></condition>
-	<!-- <property name="jboss-endorsed-dir" location="${jboss-home}/lib/endorsed/"/> -->
+	<property name="jboss-endorsed-dir" location="${jboss-home}/lib/endorsed/"/>
 
 	<condition property="lib" value="${jboss-home}/modules/" else="${jboss-server-dir}/lib"><isset property="AS7"/></condition>
 	<property name="ant.project.name" value="${dirName}" />	
@@ -154,12 +160,14 @@ Adding custom lib directory in build.properties
 		<fileset dir="${jboss-home}/" includes="common/lib/**/*.jar"/> <!-- eap 5 -->
 		<fileset dir="${jboss-home}/" includes="lib/**/*.jar"/>
 		<fileset dir="${jboss-home}/" includes="client/**/*.jar"/>
+		<fileset dir="${jboss-home}/" includes="jboss-modules.jar"/> <!-- eap6 -->
 		<fileset dir="${jboss-server-dir}/" includes="lib/**/*.jar"/>
 		<fileset dir="${jboss-deploy-dir}/" includes="**/jsf*.jar"/>
 		<fileset dir="${jboss-deploy-dir}/" includes="**/portal-*.jar"/>
     <fileset dir="${jboss-deploy-dir}/" includes="**/portlet-*.jar"/>
     <fileset dir="${jboss-deploy-dir}/" includes="*jboss-portal*/**/*.jar"/>
     <fileset dir="${jboss-deploy-dir}/" includes="*ejb3.deployer*/**/*.jar"/>
+    <fileset dir="${jboss-deploy-dir}/" includes="jbossweb.sar/jbossweb.jar"/>
     <fileset dir="${jboss-server-dir}/" includes="deployers/**/*.jar"/>
 
 		<!-- if parent dir is an EAR and contains a lib dir then add to classpath -->
@@ -310,7 +318,7 @@ Adding custom lib directory in build.properties
 
 		<echo>PROPS: ${srcpath} ${destdir}</echo>
 
-		<javac destdir="${destdir}" debug="${debug}" debuglevel="${debuglevel}">
+		<javac target="1.5" source="1.5" destdir="${destdir}" debug="${debug}" debuglevel="${debuglevel}">
 			<src path="${srcpath}"/>
 			<classpath refid="classpath"/>
 		</javac>
@@ -485,6 +493,7 @@ Adding custom lib directory in build.properties
 		<java classname="${test-client}" fork="true">
         <jvmarg value="-Djava.endorsed.dirs=${jboss-endorsed-dir}"/>
         <jvmarg value="-Djava.security.policy=${auth-conf}"/>
+        <jvmarg value="-Djava.awt.headless=true"/>
 <!--
      -Djava.security.manager -Djava.security.policy=$JBOSS_HOME/bin/java.policy"
 -->
