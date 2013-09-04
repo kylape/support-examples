@@ -7,7 +7,6 @@
 
 package com.redhat.gss.jaxws;
 
-import javax.xml.ws.spi.Provider;
 import org.jboss.logging.Logger;
 import javax.naming.InitialContext;
 import javax.annotation.PostConstruct;
@@ -21,7 +20,6 @@ import javax.xml.namespace.QName;
 import java.util.ArrayList;
 
 @javax.jws.WebService(serviceName="HelloWS", portName="hello")
-@org.apache.cxf.annotations.Logging(pretty=true)
 public class HelloWSImpl
 {
   private Logger log = Logger.getLogger(this.getClass().getName());
