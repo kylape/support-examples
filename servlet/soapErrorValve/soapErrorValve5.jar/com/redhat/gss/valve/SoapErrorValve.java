@@ -34,9 +34,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
-public class SoapErrorValve5 extends ErrorReportValve
+public class SoapErrorValve extends ErrorReportValve
 {
-  private static Logger log = Logger.getLogger(SoapErrorValve5.class);
+  private static Logger log = Logger.getLogger(SoapErrorValve.class);
 
   private static final String SOAP = "http://schemas.xmlsoap.org/soap/envelope/";
   private static final QName serverFault = new QName(SOAP, "Server");
