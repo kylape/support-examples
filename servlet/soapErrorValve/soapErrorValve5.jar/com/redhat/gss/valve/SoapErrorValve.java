@@ -46,34 +46,22 @@ public class SoapErrorValve extends ErrorReportValve
   @Override
   public void report(Request request, Response response, Throwable exception)
   {
-    log.info("I'm getting invoked");
     // Do nothing on non-HTTP responses
     int statusCode = response.getStatus();
 
     // Do nothing on a 1xx, 2xx and 3xx status
     // Do nothing if anything has been written already
-    if ((statusCode < 400)) 
-    {
-      log.info("Returning due to <400 status code");
+    if ((statusCode < 400) || (response.getContentCount() > 0))
       return;
-    }
-    else if(response.getContentCount() > 0)
-    {
-      log.info("Returning because someone's already written a response.");
-      Thread.dumpStack();
-      return;
-    }
-
 
     String message = RequestUtil.filter(response.getMessage());
     if (message == null)
-        message = "";
+      message = "";
 
     StringWriter result = new StringWriter();
 
     try
     {
-      log.info("Creating SOAP message...");
       SOAPMessage soapMessage = createNewSoapMessage();
       
       SOAPPart requestSoapPart = soapMessage.getSOAPPart();
@@ -87,14 +75,13 @@ public class SoapErrorValve extends ErrorReportValve
     }
     catch(Exception e)
     {
-      log.error("Error creating SOAP fault", e);
+      log.debug("Error creating SOAP fault", e);
       //Delegate to the other ErrorReportValve
       return;
     }
     
     try 
     {
-      log.info("Writing response...");
       try 
       {
         response.setContentType("application/soap+xml");
