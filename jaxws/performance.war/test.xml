@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Header/>
+  <env:Body>
+    <ns2:runTest xmlns:ns2="http://jaxws.gss.redhat.com/">
+      <arg0>20</arg0>
+      <arg1>200</arg1>
+    </ns2:runTest>
+  </env:Body>
+</env:Envelope>
