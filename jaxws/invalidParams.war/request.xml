@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Header/>
+  <env:Body>
+    <ns2:hello xmlns:ns2="http://jaxws.gss.redhat.com/" xmlns:ns3="soemthing">
+      <arg0>
+        <count>40</count>
+        <date>2013-09-04</date>
+      </arg0>
+    </ns2:hello>
+  </env:Body>
+</env:Envelope>
