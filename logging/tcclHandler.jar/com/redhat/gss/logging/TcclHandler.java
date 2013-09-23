@@ -19,17 +19,17 @@ import java.io.FileNotFoundException;
 public class TcclHandler extends ExtHandler
 {
   private static final String SERVER = "server";
-  private static final Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
-  private static Map<String, String> deploymentMap = null;
+  private final Map<String, FileHandler> fileHandlers = new HashMap<String, FileHandler>();
+  private Map<String, String> deploymentMap = null;
+  private String dirName = null;
+  private boolean logSystemMessages = false;
+  
   private ThreadLocal<Boolean> invoked = new ThreadLocal<Boolean>() {
     protected Boolean initialValue()
     {
       return Boolean.FALSE;
     }
   };
-  private Object lock = new Object();
-
-  private String dirName = null;
   
   public String getLogNames()
   {
@@ -49,7 +49,7 @@ public class TcclHandler extends ExtHandler
     for(String stringPair : logNames.split(","))
     {
       //Example format
-      //"myDeployment:funName"
+      //"myDeployment.war:funName"
       //That takes myDeployment.war and writes it to funName.log
       String[] pair = stringPair.split(":");
       if(pair.length != 2)
@@ -61,40 +61,39 @@ public class TcclHandler extends ExtHandler
   @Override
   protected void doPublish(final ExtLogRecord record)
   {
-    synchronized(lock) //probly not necessary
+    if(invoked.get().equals(Boolean.TRUE))
+      return;
+    else
+        invoked.set(Boolean.TRUE);
+
+    try
     {
-      if(invoked.get().equals(Boolean.TRUE))
-      {
+      String deployment = getDeploymentName();
+
+      if(deployment == null)
         return;
-      }
-      else
+
+      // Did we configure a custom log name for this deployment?
+      String logName = deploymentMap.get(deployment);
+      if(logName == null)
       {
-          invoked.set(Boolean.TRUE);
+        logName = deployment; // default log name
+      }
+      
+      FileHandler fileHandler = fileHandlers.get(logName);
+      if(fileHandler == null)
+      {
+        fileHandler = createFileHandler(logName);
+      }
+      fileHandler.publish(record);
+
+      // TODO why is this here?
+      if(!fileHandler.isAutoFlush())
+      {
+        fileHandler.flush();
       }
     }
-
-    String deployment = getDeploymentName();
-
-    // Did we configure a custom log name for this deployment?
-    String logName = deploymentMap.get(deployment);
-    if(logName == null)
-    {
-      logName = deployment; // default log name
-    }
-    
-    FileHandler fileHandler = fileHandlers.get(logName);
-    if(fileHandler == null)
-    {
-      fileHandler = createFileHandler(logName);
-    }
-    fileHandler.publish(record);
-
-    if(!fileHandler.isAutoFlush())
-    {
-      fileHandler.flush();
-    }
-
-    synchronized(lock)
+    finally
     {
       invoked.set(Boolean.FALSE);
     }
@@ -104,6 +103,7 @@ public class TcclHandler extends ExtHandler
   {
     try
     {
+      // TODO add ability to rotate
       File f = new File(dirName + File.separator + logName + ".log");
       FileHandler newHandler = new FileHandler(getFormatter(), f);
       fileHandlers.put(logName, newHandler);
@@ -115,7 +115,7 @@ public class TcclHandler extends ExtHandler
     }
   }
 
-  private static String getDeploymentName()
+  private String getDeploymentName()
   {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
@@ -125,31 +125,16 @@ public class TcclHandler extends ExtHandler
       String moduleName = mcl.getModule().getIdentifier().toString();
       if(moduleName.startsWith("deployment"))
       {
-        List<String> segments = new ArrayList<String>();
-        for(String segment : moduleName.split("\\."))
-        {
-          segments.add(segment);
-        }
-        // Remove 'deployment' from the beginning and the suffix from the end
-        segments.remove(0);
-        segments.remove(segments.size()-1);
-        StringBuilder builder = new StringBuilder();
-        for(String segment : segments)
-        {
-          builder.append(segment + ".");
-        }
-        builder.deleteCharAt(builder.length()-1);
-        return builder.toString();
-      }
-      else
-      {
-        return SERVER;
+        // Strip the deployment prefix and the slot suffix
+        return moduleName.substring(moduleName.indexOf(".") + 1, moduleName.indexOf(":"));
       }
     }
-    else // Not instanceof ModuleClassLoader
-    {
+
+    // Either not ModuleClassLoader or not a message from an application thread
+    if(logSystemMessages)
       return SERVER;
-    }
+    else
+      return null;
   }
   
   public String getDirName()
@@ -160,5 +145,15 @@ public class TcclHandler extends ExtHandler
   public void setDirName(String dirName)
   {
     this.dirName = dirName;
+  }
+
+  public boolean getLogSystemMessages()
+  {
+    return this.logSystemMessages;
+  }
+  
+  public void setLogSystemMessages(boolean logSystemMessages)
+  {
+    this.logSystemMessages = logSystemMessages;
   }
 }
