@@ -32,6 +32,7 @@ public class SignTest
     ServiceIface proxy = (ServiceIface)service.getPort(ServiceIface.class);
     setupWsse(proxy);
     proxy.sayHello();
+    proxy.greetMe();
   }
 
   private void setupWsse(ServiceIface proxy)

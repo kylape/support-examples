@@ -26,7 +26,7 @@
   <bean id="AuthorizeIn" class="org.apache.cxf.interceptor.security.SimpleAuthorizingInterceptor">
     <property name="methodRolesMap" ref="methodPermissions"/>
   </bean>
-  <jaxws:endpoint id="ServiceImpl" address="http://@jboss.bind.address@:8080/cxfUsernameTokenEap5/ServiceImpl" implementor="com.redhat.gss.wsse.ServiceImpl">
+  <jaxws:endpoint id="ServiceImpl" address="http://localhost:8080/cxfUsernameTokenEap5/ServiceImpl" implementor="com.redhat.gss.wsse.ServiceImpl">
     <jaxws:outInterceptors>
       <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
       <bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor"/>

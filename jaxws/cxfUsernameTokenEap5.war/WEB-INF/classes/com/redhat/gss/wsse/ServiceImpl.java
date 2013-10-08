@@ -26,7 +26,7 @@ import javax.jws.WebService;
 @WebService
 (
    serviceName = "SecurityService",
-   wsdlLocation = "WEB-INF/wsdl/SecurityService.wsdl",
+   // wsdlLocation = "WEB-INF/wsdl/SecurityService.wsdl",
    targetNamespace = "http://www.jboss.org/jbossws/ws-extensions/wssecurity",
    endpointInterface = "com.redhat.gss.wsse.ServiceIface"
 )
@@ -37,6 +37,7 @@ public class ServiceImpl implements ServiceIface
    {
       return "Secure Hello World!";
    }
+
    public String greetMe()
    {
       return "Greetings!";
