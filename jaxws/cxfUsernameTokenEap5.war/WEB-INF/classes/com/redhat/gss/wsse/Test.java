@@ -15,13 +15,13 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 
-public class SignTest
+public class Test
 {
   private final String serviceURL = "http://localhost:8080/cxfUsernameTokenEap5/ServiceImpl";
 
   public static void main(String[] args) throws Exception
   {
-    new SignTest().test();
+    new Test().test();
   }
 
   public void test() throws Exception
