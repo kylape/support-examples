@@ -13,5 +13,4 @@ public class MyValidationEventHandler implements ValidationEventHandler {
     log.warn(event.getMessage());
     return true;
   }
-
 }

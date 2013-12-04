@@ -10,27 +10,34 @@ package com.redhat.gss.jaxws;
 import javax.xml.ws.spi.Provider;
 import org.jboss.logging.Logger;
 import javax.naming.InitialContext;
+import java.util.Date;
+import org.apache.cxf.annotations.EndpointProperty;
+import org.apache.cxf.annotations.EndpointProperties;
 
+// @org.apache.cxf.annotations.Logging(pretty=true)
+// @org.apache.cxf.feature.Features(features={"org.apache.cxf.feature.LoggingFeature"})
+// @org.jboss.ws.annotation.SchemaValidation
 @javax.jws.WebService(serviceName="HelloWS", portName="hello")
-//@org.jboss.wsf.spi.annotation.WebContext(transportGuarantee="CONFIDENTIAL")
-//@org.apache.cxf.annotations.Logging(pretty=true)
-//@org.apache.cxf.feature.Features(features={"org.apache.cxf.feature.LoggingFeature"})
-public class HelloWSImpl implements java.io.Serializable
+// @EndpointProperties (
+  // @EndpointProperty(key="set-jaxb-validation-event-handler", value={"false"})
+  // @EndpointProperty(key="jaxb-validation-event-handler", value="com.redhat.gss.jaxws.MyValidationEventHandler")
+// )
+public class HelloWSImpl
 {
   private Logger log = Logger.getLogger(this.getClass().getName());
 
-  public String hello(String name)
+  public ReturnDate hello(String name)
   {
-    try
+    log.info("Hello, " + name);
+    ReturnDate d = new ReturnDate();
+    if(name.startsWith("K"))
     {
-      // new InitialContext().bind(this.getClass().getName(), this);
-      log.info("Hello, " + name);
-      return "Hello, " + name;
+      return d;
     }
-    catch(Exception e)
+    else
     {
-      log.error("", e);
-      return "Fail";
+      d.setDate(new Date());
+      return d;
     }
   }
 }

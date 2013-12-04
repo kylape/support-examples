@@ -10,9 +10,10 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   <cxf:bus>
     <cxf:properties>
       <!-- <beans:entry key="set-jaxb-validation-event-handler" value="false"/> -->
-      <beans:entry key="jaxb-validation-event-handler">
-        <beans:bean class="com.redhat.gss.jaxws.MyValidationEventHandler" />
-      </beans:entry>
+      <!-- <beans:entry key="jaxb-validation-event-handler"> -->
+      <!--   <beans:bean class="com.redhat.gss.jaxws.MyValidationEventHandler" /> -->
+      <!-- </beans:entry> -->
+      <!-- <beans:entry key="schema-validation-enabled" value="true"/> -->
     </cxf:properties>
   </cxf:bus>
 </beans:beans>

@@ -10,5 +10,5 @@ package com.redhat.gss.jaxws;
 @javax.jws.WebService(portName="hello")
 public interface HelloWS
 {
-  public String hello(String name);
+  public ReturnDate hello(String name);
 }
