@@ -34,7 +34,7 @@ public class SecureClient
 
     Map<String, Object> ctx = ((BindingProvider)port).getRequestContext();
     ctx.put("ws-security.username", "klape");
-    ctx.put("ws-security.password", "admin");
+    ctx.put("ws-security.password", "RedHat13#");
 
     //Invoke client
     log.info("Output of sayHello operation: " + port.sayHello("Kyle"));

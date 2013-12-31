@@ -10,16 +10,14 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 @javax.jws.WebService(wsdlLocation="META-INF/wsdl/secureService.wsdl")
 @SecurityDomain("other")
 @EndpointConfig(configFile = "META-INF/jaxws-endpoint-config.xml", configName = "Custom WS-Security Endpoint")
-/*
 @InInterceptors(interceptors = {
   "org.jboss.wsf.stack.cxf.security.authentication.SubjectCreatingPolicyInterceptor"
   }
 )
-*/
 public class SecureService
 {
 
-  //@RolesAllowed("hello")
+  @RolesAllowed("hello")
   public String sayHello(String name)
   {
     return "Hello, " + name;
