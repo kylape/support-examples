@@ -8,12 +8,17 @@
 # - you have no other EAP 6/AS 7 processes running
 # - JBOSS_HOME and JAVA_HOME are properly set
 
-ant setup-example-two-way-ssl
-
 if [ "x$JBOSS_HOME" = "x" ]; then
   echo "Must set JBOSS_HOME"
   exit 1
 fi
+
+if [ "x$JAVA_HOME" = "x" ]; then
+  echo "Must set JAVA_HOME"
+  exit 1
+fi
+
+ant setup-example-two-way-ssl
 
 ant #Build the project
 

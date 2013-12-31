@@ -69,13 +69,13 @@ public class TestClient
 
   public void setupSsl(HTTPConduit httpConduit) throws Exception
   {
-    final String certAlias = "cn=client, ou=gss, o=red hat, l=raleigh, st=nc, c=us";
+    // final String certAlias = "cn=client, ou=gss, o=red hat, l=raleigh, st=nc, c=us";
     TLSClientParameters tlsParams = new TLSClientParameters();  
-    // tlsParams.setDisableCNCheck(true);  
+    tlsParams.setDisableCNCheck(true);  
     tlsParams.setSecureSocketProtocol("TLSv1");
 
     //This call is only available and/or required in EAP 6.0.1+
-    tlsParams.setCertAlias(certAlias);
+    // tlsParams.setCertAlias(certAlias);
 
     //Set up the truststore for CXF
     KeyStore trustStore = KeyStore.getInstance("JKS");  

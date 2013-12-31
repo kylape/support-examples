@@ -408,6 +408,15 @@ Adding custom lib directory in build.properties
       <filelist files="${undeploy.files}"/>
     </delete>
   </target>
+  <target name="test5" depends="build">
+		<java classname="${test-client}" fork="true">
+      <jvmarg value="-Djava.endorsed.dirs=${jboss-endorsed-dir}"/>
+      <jvmarg value="-Djava.awt.headless=true"/>
+      <classpath>
+        <path refid="classpath"/>
+			</classpath>
+		</java>
+  </target>
   <target name="test" depends="build">
     <echo>java -jar ${jboss-home}/jboss-modules.jar -mp ${jboss-home}/modules -cp ${buildPath} -dep ${module-deps} ${test-client}</echo>
     <java jar="${jboss-home}/jboss-modules.jar" fork="true">
