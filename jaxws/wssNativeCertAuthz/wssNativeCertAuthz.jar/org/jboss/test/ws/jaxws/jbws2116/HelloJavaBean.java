@@ -23,6 +23,7 @@ package org.jboss.test.ws.jaxws.jbws2116;
 
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -40,7 +41,7 @@ import org.jboss.wsf.spi.annotation.WebContext;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @BindingType(javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 @WebContext(contextRoot = "/wssNativeCertAuthz", urlPattern = "/*")
-@EndpointConfig(configName = "Standard WSSecurity Endpoint")
+@EndpointConfig(configName = "Standard WSSecurity Endpoint", configFile="META-INF/jaxws-endpoint-config.xml")
 public class HelloJavaBean
 {
    private Logger log = Logger.getLogger(HelloJavaBean.class);
@@ -48,7 +49,7 @@ public class HelloJavaBean
    private WebServiceContext ctx;
 
    @WebMethod
-   @RolesAllowed({"friend"})
+   // @RolesAllowed({"friend"})
    public String echo(String par)
    {
       log.info("User principal: " + ctx.getUserPrincipal());
@@ -56,7 +57,7 @@ public class HelloJavaBean
    }
    
    @WebMethod
-   @RolesAllowed({"girlfriend"})
+   // @RolesAllowed({"friend"})
    public String echo2(String par)
    {
       log.info("User principal: " + ctx.getUserPrincipal());

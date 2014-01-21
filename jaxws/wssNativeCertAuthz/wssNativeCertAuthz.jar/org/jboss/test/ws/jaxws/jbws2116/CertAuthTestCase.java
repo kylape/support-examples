@@ -47,7 +47,7 @@ public class CertAuthTestCase
    {
       CertAuthTestCase test = new CertAuthTestCase();
       test.testAuthAlice();
-      //test.testAuthJohn();
+      test.testAuthJohn();
    }
 
    public void testAuthAlice() throws Exception

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="certuath" resourceRoot="" soapui-version="4.5.1" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="HelloBinding" type="wsdl" bindingName="{http://org.jboss.ws/wssNativeCertAuthz}HelloBinding" soapVersion="1_2" anonymous="optional" definition="http://localhost:8080/wssNativeCertAuthz/HelloService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/wssNativeCertAuthz/HelloService?wsdl"><con:part><con:url>http://localhost:8080/wssNativeCertAuthz/HelloService?wsdl</con:url><con:content><![CDATA[<definitions name="HelloService" targetNamespace="http://org.jboss.ws/wssNativeCertAuthz" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://org.jboss.ws/wssNativeCertAuthz" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <types/>
+  <message name="Hello_echo2">
+    <part name="arg0" type="xsd:string"/>
+  </message>
+  <message name="Hello_echo">
+    <part name="arg0" type="xsd:string"/>
+  </message>
+  <message name="Hello_echo2Response">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="Hello_echoResponse">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <portType name="Hello">
+    <operation name="echo" parameterOrder="arg0">
+      <input message="tns:Hello_echo"/>
+      <output message="tns:Hello_echoResponse"/>
+    </operation>
+    <operation name="echo2" parameterOrder="arg0">
+      <input message="tns:Hello_echo2"/>
+      <output message="tns:Hello_echo2Response"/>
+    </operation>
+  </portType>
+  <binding name="HelloBinding" type="tns:Hello">
+    <soap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="echo">
+      <soap12:operation soapAction=""/>
+      <input>
+        <soap12:body namespace="http://org.jboss.ws/wssNativeCertAuthz" use="literal"/>
+      </input>
+      <output>
+        <soap12:body namespace="http://org.jboss.ws/wssNativeCertAuthz" use="literal"/>
+      </output>
+    </operation>
+    <operation name="echo2">
+      <soap12:operation soapAction=""/>
+      <input>
+        <soap12:body namespace="http://org.jboss.ws/wssNativeCertAuthz" use="literal"/>
+      </input>
+      <output>
+        <soap12:body namespace="http://org.jboss.ws/wssNativeCertAuthz" use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="HelloService">
+    <port binding="tns:HelloBinding" name="HelloPort">
+      <soap12:address location="http://localhost:8080/wssNativeCertAuthz"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/wssNativeCertAuthz</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="echo" bindingOperationName="echo" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1" outgoingWss="a"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/wssNativeCertAuthz</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wss="http://org.jboss.ws/wssNativeCertAuthz">
+   <soap:Header/>
+   <soap:Body>
+      <wss:echo>
+         <arg0>yo</arg0>
+      </wss:echo>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://org.jboss.ws/wssNativeCertAuthz/Hello/echoRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="echo2" bindingOperationName="echo2" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/wssNativeCertAuthz</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wss="http://org.jboss.ws/wssNativeCertAuthz">
+   <soap:Header/>
+   <soap:Body>
+      <wss:echo2>
+         <arg0>?</arg0>
+      </wss:echo2>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://org.jboss.ws/wssNativeCertAuthz/Hello/echo2Request"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer><con:crypto><con:source>/Users/klape/support/support-examples/jaxws/wssNativeCertAuthz/wssNativeCertAuthz.jar/META-INF/alice-sign.jks</con:source><con:password>password</con:password><con:type>KEYSTORE</con:type><con:defaultAlias>alice</con:defaultAlias><con:aliasPassword>password</con:aliasPassword></con:crypto><con:outgoing><con:name>a</con:name><con:entry type="Signature" username="1" password="password"><con:configuration><crypto>alice-sign.jks</crypto><keyIdentifierType>1</keyIdentifierType><signatureAlgorithm>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureAlgorithm><signatureCanonicalization>http://www.w3.org/2001/10/xml-exc-c14n#</signatureCanonicalization><useSingleCert>true</useSingleCert><digestAlgorithm>http://www.w3.org/2000/09/xmldsig#sha1</digestAlgorithm></con:configuration></con:entry></con:outgoing></con:wssContainer><con:sensitiveInformation/></con:soapui-project>
