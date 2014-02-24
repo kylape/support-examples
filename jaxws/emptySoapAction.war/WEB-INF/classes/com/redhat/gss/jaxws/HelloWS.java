@@ -7,8 +7,19 @@
 
 package com.redhat.gss.jaxws;
 
-@javax.jws.WebService
-public interface HelloWS
+import org.apache.log4j.Logger;
+
+@javax.jws.WebService(serviceName="HelloWS", portName="hello")
+@org.apache.cxf.interceptor.InInterceptors(interceptors={
+  "com.redhat.gss.jaxws.RemoveSoapActionInterceptor"
+})
+public class HelloWS
 {
-  public String hello(String input);
+  private Logger log = Logger.getLogger(this.getClass().getName());
+
+  public String hello(String input) throws Exception
+  {
+    log.error(input);
+    return "Hello, " + input;
+  }
 }
