@@ -1,0 +1,5 @@
+/subsystem=logging/logging-profile=myLoggingProfile:add
+/subsystem=logging/logging-profile=myLoggingProfile/file-handler=myHandler:add(level=ALL,file={"relative-to" => "jboss.server.log.dir","path" => "myapp.log"})
+/subsystem=logging/logging-profile=myLoggingProfile/root-logger=ROOT:add(handlers=[handler=myHandler])
+/subsystem=logging/logging-profile=myLoggingProfile/root-logger=ROOT:change-root-log-level(level=INFO)
+deploy loggingProfile.war

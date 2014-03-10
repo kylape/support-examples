@@ -1,0 +1,2 @@
+undeploy loggingProfile.war
+/subsystem=logging/logging-profile=myLoggingProfile:remove
