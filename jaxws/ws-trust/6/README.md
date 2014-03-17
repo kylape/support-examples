@@ -18,36 +18,25 @@ request -> SAML2Handler -> WSAuthenticationHandler -> SAML2STSLoginModule -> STS
 To install:
 
 - Set `$JBOSS_HOME` and make sure `ant` is on your `PATH`.
-- I used the STS provided by the Picketlink quickstart project [found here](https://github.com/picketlink2/picketlink-quickstarts).
-
-  - Once in the root folder of the git project, I check out the `v2.1.6.Final`
-    tag and then nagivate to `ws-trust/picketlink-sts` to build the STS using
-    `mvn install`.  I take the `picketlink-sts-2.1.6.Final-jboss-as7.war` from
-    the target folder and deploy it to JBoss.
-
-  - I changed the security domain used by the STS from
-    `picketlink-sts` to `other`. 
-
-  - I added a user to this domain via the `add-user.sh` script in the bin
-    directory (I used `sts`/`RedHat13#` and added the role `JBossAdmin` to the
-    user).
-
-- I added the `picketlink-sts` security domain that will be used by my target
+- I used the STS provided by the Picketlink quickstart, which can be found in the EAP 6.2 quickstarts.
+- Run the `configure-security-domain.cli` script found in the quickstart.
+- Deploy the STS using `mvn jboss-as:deploy`, just the same as the other quickstarts are deployed.
+- I added the `ws-endpoint` security domain that will be used by my target
   endpoint (i.e. Service Provider (SP)):
 
   ```
-  <security-domain name="picketlink-sts" cache-type="default">
+  <security-domain name="ws-endpoint" cache-type="default">
       <authentication>
           <login-module code="org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule" 
                         flag="required" 
                         module="org.picketlink">
-              <module-option name="configFile" value="/example-sts-client.properties"/>
+              <module-option name="configFile" value="/sts-client.properties"/>
           </login-module>
       </authentication>
   </security-domain>
   ```
   
-  The config file is in my target endpoint's root classpath (i.e.
+  The STS client config file is in my target endpoint's root classpath (i.e.
   `WEB-INF/classes`).
 
 - Build and deploy `sts-client.war` by running `cd sts-client.war; ant deploy`

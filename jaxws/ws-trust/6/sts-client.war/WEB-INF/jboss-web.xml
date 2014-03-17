@@ -1,3 +1,3 @@
 <jboss-web>
-  <security-domain>picketlink-sts</security-domain>
+  <security-domain>ws-endpoint</security-domain>
 </jboss-web>

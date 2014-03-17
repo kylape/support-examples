@@ -12,6 +12,9 @@ import org.picketlink.identity.federation.api.wstrust.WSTrustClient.SecurityInfo
 import org.picketlink.identity.federation.core.wstrust.wrappers.RequestSecurityToken;
 import org.picketlink.identity.federation.core.wstrust.WSTrustException;
 import org.picketlink.identity.federation.core.wstrust.plugins.saml.SAMLUtil;
+import org.picketlink.identity.federation.ws.trust.OnBehalfOfType;
+import org.picketlink.identity.federation.ws.wss.secext.UsernameTokenType;
+import org.picketlink.identity.federation.ws.wss.secext.AttributedString;
 import org.w3c.dom.Element;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -64,19 +67,24 @@ public class StsClient extends HttpServlet
 
   public Element testSTS() throws Exception
   {
-    // create a WSTrustClient instance.
     WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", 
       "http://localhost:8080/picketlink-sts/PicketLinkSTS", 
-      new SecurityInfo("sts", "RedHat13#"));
+      new SecurityInfo("UserB", "PassB"));
     
-    // issue a SAML assertion using the client API.
     Element assertion = null;
     try 
     {
-      URI keyType = URI.create("http://docs.oasis-open.org/ws-sx/ws-trust/200512/PublicKey");
       RequestSecurityToken request = new RequestSecurityToken();
       request.setTokenType(URI.create(SAMLUtil.SAML2_TOKEN_TYPE));
-      request.setKeyType(keyType);
+      AttributedString as = new AttributedString();
+      as.setValue("UserA");
+      as.setId("UserA");
+      UsernameTokenType utt = new UsernameTokenType();
+      utt.setUsername(as);
+      utt.setId("UserA");
+      OnBehalfOfType obot = new OnBehalfOfType();
+      obot.add(utt);
+      request.setOnBehalfOf(obot);
       assertion = client.issueToken(request);
     }
     catch (WSTrustException wse)
@@ -84,37 +92,23 @@ public class StsClient extends HttpServlet
       log.error("Unable to issue assertion: ", wse);
     }
     
-    // print the assertion for demonstration purposes.
-    log.info("Successfully issued a standard SAMLV2.0 Assertion!");
-    printAssertion(assertion);
-
-    /*
-    // validate the received SAML assertion.
-    try
-    {
-      log.info("Is assertion valid? " + client.validateToken(assertion));
-    }
-    catch (WSTrustException wse)
-    {
-      log.error("Failed to validate SAMLV2.0 Assertion: ", wse);
-    }
-    */
     return assertion;
   }
 
   public String sayHello(Element assertion, String name) throws Exception
   {
-    URL wsdl = new URL("http://localhost:8080/sts-client/test?wsdl");
+    //Initialize client
+    URL wsdl = new URL("http://localhost:8080/sts-client/test?wsdl"); //Get WSDL
     QName qname = new QName("http://sts.gss.redhat.com/", "TestEndpointImplService");
     QName portQname = new QName("http://sts.gss.redhat.com/", "TestEndpointImplPort");
-    Service service = Service.create(wsdl, qname);
-    TestEndpoint port = service.getPort(portQname, TestEndpoint.class);
+    Service service = Service.create(wsdl, qname); //Create endpoint metadata
+    TestEndpoint port = service.getPort(portQname, TestEndpoint.class); //Get proxy
     BindingProvider bp = (BindingProvider)port;
-    bp.getRequestContext().put(SAML2Constants.SAML2_ASSERTION_PROPERTY, assertion);
+    bp.getRequestContext().put(SAML2Constants.SAML2_ASSERTION_PROPERTY, assertion); //insert assertion
     List<Handler> handlers = bp.getBinding().getHandlerChain();
-    handlers.add(new SAML2Handler());
+    handlers.add(new SAML2Handler()); //Add Picketlink JAX-WS handler to process assertion
     bp.getBinding().setHandlerChain(handlers);
-    return port.hello(name);
+    return port.hello(name); //invoke endpoint
   }
 
   private void printAssertion(Element assertion) throws Exception
