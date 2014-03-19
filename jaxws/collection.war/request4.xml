@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Header/>
+  <env:Body>
+    <ns2:parseToList xmlns:ns2="http://ws.gss.redhat.com/">
+      <arg0>names:Kyle,Laura,James;places:Vancouver,Fayetteville,New York</arg0>
+    </ns2:parseToList>
+  </env:Body>
+</env:Envelope>
