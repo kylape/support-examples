@@ -43,18 +43,19 @@ public class HelloWS implements Hello {
     return map;
   }
 
-  // public Map<String, List<String>> parseListMap(String data) {
-  //   Map<String, List<String>> mapOfLists = new HashMap<String, List<String>>();
-  //   for(String keyValData : data.split(";")) {
-  //     String[] keyVal = keyValData.split(":");
-  //     String key = keyVal[0];
-  //     String value = keyVal[1];
-  //     List<String> list = new ArrayList<String>();
-  //     mapOfLists.put(key, list);
-  //     for(String item : value.split(",")) {
-  //       list.add(item);
-  //     }
-  //   }
-  //   return mapOfLists;
-  // }
+  public Map<String, StringList> parseListMap(String data) {
+    Map<String, StringList> mapOfLists = new HashMap<String, StringList>();
+    for(String keyValData : data.split(";")) {
+      String[] keyVal = keyValData.split(":");
+      String key = keyVal[0];
+      String value = keyVal[1];
+      StringList sl = new StringList();
+      List<String> list = sl.getStringList();
+      mapOfLists.put(key, sl);
+      for(String item : value.split(",")) {
+        list.add(item);
+      }
+    }
+    return mapOfLists;
+  }
 }
