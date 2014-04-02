@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wsrm.gss.redhat.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="HelloWSService" targetNamespace="http://wsrm.gss.redhat.com/">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://wsrm.gss.redhat.com/" elementFormDefault="unqualified" targetNamespace="http://wsrm.gss.redhat.com/" version="1.0">
+      <xs:element name="hello" type="tns:hello"/>
+      <xs:element name="helloResponse" type="tns:helloResponse"/>
+      <xs:complexType name="hello">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="helloResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="helloResponse">
+    <wsdl:part element="tns:helloResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="hello">
+    <wsdl:part element="tns:hello" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Hello">
+    <wsdl:operation name="hello">
+      <wsdl:input message="tns:hello" name="hello">
+    </wsdl:input>
+      <wsdl:output message="tns:helloResponse" name="helloResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HelloWSServiceSoapBinding" type="tns:Hello">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="hello">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="hello">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="helloResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloWSService">
+    <wsdl:port binding="tns:HelloWSServiceSoapBinding" name="HelloWSPort">
+      <soap:address location="http://localhost:8080/wsrm11/HelloWS"/>
+    </wsdl:port>
+    <wsp:PolicyReference URI="#HelloWSServiceServicePolicy"/>
+  </wsdl:service>
+  <wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" wsu:Id="HelloWSServiceServicePolicy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:InitiatorToken>
+              <wsp:Policy>
+                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                  <wsp:Policy>
+                    <sp:WssX509V1Token11/>
+                  </wsp:Policy>
+                </sp:X509Token>
+              </wsp:Policy>
+            </sp:InitiatorToken>
+            <sp:RecipientToken>
+              <wsp:Policy>
+                <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                  <wsp:Policy>
+                    <sp:WssX509V1Token11/>
+                  </wsp:Policy>
+                </sp:X509Token>
+              </wsp:Policy>
+            </sp:RecipientToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:TripleDesRsa15/>
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax/>
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:AsymmetricBinding>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body/>
+        </sp:SignedParts>
+        <wsam:Addressing xmlns:wsam="http://www.w3.org/2007/02/addressing/metadata">
+          <wsp:Policy/>
+        </wsam:Addressing>
+        <wsrmp:RMAssertion xmlns:wsrmp="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrmp:InactivityTimeout Milliseconds="20000"/>
+        </wsrmp:RMAssertion>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+</wsdl:definitions>
