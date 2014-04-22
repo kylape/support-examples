@@ -7,8 +7,10 @@
 
 package com.redhat.gss.jaxws;
 
+import java.util.Date;
+
 @javax.jws.WebService(portName="hello")
 public interface HelloWS
 {
-  public ReturnDate hello(String name);
+  public ReturnDate hello(String name, Date date);
 }

@@ -26,9 +26,10 @@ public class HelloWSImpl
 {
   private Logger log = Logger.getLogger(this.getClass().getName());
 
-  public ReturnDate hello(String name)
+  public ReturnDate hello(String name, Date date)
   {
     log.info("Hello, " + name);
+    log.info("Date: " + date);
     ReturnDate d = new ReturnDate();
     if(name.startsWith("K"))
     {

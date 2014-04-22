@@ -4,7 +4,8 @@
   <env:Body>
     <ns2:hello xmlns:ns2="http://jaxws.gss.redhat.com/">
       <arg0>$1</arg0>
-      <arg1>Ignored</arg1>
+      <!-- <arg1>2014-04-22T11:26:56.688-07:00</arg1> -->
+      <arg1></arg1>
     </ns2:hello>
   </env:Body>
 </env:Envelope>
