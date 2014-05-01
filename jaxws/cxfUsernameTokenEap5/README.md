@@ -17,3 +17,26 @@ mapping in `jbossws-cxf.xml`.
 This example uses the `JBossWS` security domain, which is included in EAP 5 by
 default.  You'll need to comment out the `kermit` user in
 `$JBOSS_HOME/sever/default/conf/props/jbossws-users.propertes`.
+
+##Digest
+
+If you want to use digested passwords in your UsernameToken, you must:
+
+- add the `passwordType=PasswordDigest` property to your client's request context
+- add the `supportDigestPasswords` property to your `SubjectCreatingInterceptor`
+- utilize a security domain that knows how to handle hashed passwords.  Example
+  from the JBossWS test suite:
+
+  ```
+<login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
+  <module-option name="usersProperties">META-INF/jbossws-users.properties</module-option>
+  <module-option name="rolesProperties">META-INF/jbossws-roles.properties</module-option>
+  <module-option name="hashAlgorithm">SHA</module-option>
+  <module-option name="hashEncoding">BASE64</module-option>
+  <module-option name="hashCharset">UTF-8</module-option>
+  <module-option name="hashUserPassword">false</module-option>
+  <module-option name="hashStorePassword">true</module-option>
+  <module-option name="storeDigestCallback">org.jboss.wsf.stack.cxf.security.authentication.callback.UsernameTokenCallback</module-option>
+  <module-option name="unauthenticatedIdentity">anonymous</module-option>
+</login-module>
+  ```
