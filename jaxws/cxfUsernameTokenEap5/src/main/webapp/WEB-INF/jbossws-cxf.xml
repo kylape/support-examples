@@ -18,6 +18,7 @@
         <entry key="action" value="UsernameToken"/>
       </map>
     </constructor-arg>
+    <property name="supportDigestPasswords" value="true"/>
   </bean>
   <util:map id="methodPermissions">
     <entry key="sayHello" value="friend"/>

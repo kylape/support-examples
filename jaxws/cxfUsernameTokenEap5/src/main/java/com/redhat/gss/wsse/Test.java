@@ -43,7 +43,7 @@ public class Test
     Map<String,Object> outProps = new HashMap<String,Object>();
     outProps.put("action", "UsernameToken");
     outProps.put("user", "kermit");
-    outProps.put("passwordType", "PasswordText");
+    outProps.put("passwordType", "PasswordDigest");
     outProps.put("passwordCallbackClass", "com.redhat.gss.wsse.KeystorePasswordCallback");
     WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps); //request
     cxfEndpoint.getOutInterceptors().add(wssOut);
