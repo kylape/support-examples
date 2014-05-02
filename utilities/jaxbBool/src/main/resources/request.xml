@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Header/>
+  <env:Body>
+    <ns2:test xmlns:ns2="http://kyle/">
+      <arg0>
+        <bool1>test</bool1>
+        <bool2>fAlse</bool2>
+        <bool3>tRue</bool3>
+        <bool4> </bool4>
+        <bool5>asdf</bool5>
+        <bool6>TRUE</bool6>
+        <bool7>FALSE</bool7>
+        <bool8>True</bool8>
+        <bool9>False</bool9>
+        <!-- It's these two that cause the unmarshalling error -->
+        <bool10>t</bool10>
+        <bool11>f</bool11>
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <bool12>true</bool12>
+      </arg0>
+    </ns2:test>
+  </env:Body>
+</env:Envelope>

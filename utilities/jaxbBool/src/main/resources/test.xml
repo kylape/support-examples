@@ -1,0 +1,14 @@
+<booleanContainer>
+  <bool1>test</bool1>
+  <bool2>fAlse</bool2>
+  <bool3>tRue</bool3>
+  <bool4> </bool4>
+  <bool5>asdf</bool5>
+  <bool6>TRUE</bool6>
+  <bool7>FALSE</bool7>
+  <bool8>True</bool8>
+  <bool9>False</bool9>
+  <bool10>t</bool10>
+  <bool11>f</bool11>
+  <bool12>true</bool12>
+</booleanContainer>
