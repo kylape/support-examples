@@ -1,0 +1,3 @@
+<jboss-web>
+  <security-domain>JBossWS</security-domain>
+</jboss-web>
