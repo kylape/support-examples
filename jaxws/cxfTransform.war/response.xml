@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: text/xml;charset=ISO-8859-1
+Content-Length: 275
+Date: Tue, 27 May 2014 16:59:19 GMT
+
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <ns2:helloResponse xmlns:ns2="http://jaxws.gss.redhat.com/">
+      <return>Hello</return>
+      <return2/>
+    </ns2:helloResponse>
+  </soap:Body>
+</soap:Envelope>
