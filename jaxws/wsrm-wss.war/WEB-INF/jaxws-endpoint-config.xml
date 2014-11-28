@@ -20,7 +20,7 @@
     </property>
     <property>
       <property-name>ws-security.callback-handler</property-name>
-      <property-value>com.redhat.gss.wss.KeystorePasswordCallback</property-value>
+      <property-value>com.redhat.gss.wsrm.KeystorePasswordCallback</property-value>
     </property>
   </endpoint-config>
 </jaxws-config>
